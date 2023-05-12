@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package dkg.dkg;
+
+import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
+
+// import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+
+// import "nexus/exported/v1beta1/types.proto";
+option go_package = "dkg/x/dkg/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc RefundMsgRequest (MsgRefundMsgRequest) returns (MsgRefundMsgRequestResponse);
+  rpc FileDispute      (MsgFileDispute     ) returns (MsgFileDisputeResponse     );
+}
+message MsgRefundMsgRequest {
+  string              creator       = 1;
+  bytes               sender        = 2 [(gogoproto.casttype)             = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  google.protobuf.Any inner_message = 3 [(cosmos_proto.accepts_interface) = "Refundable"                                   ];
+}
+
+message MsgRefundMsgRequestResponse {}
+
+message MsgFileDispute {
+  string creator = 1;
+}
+
+message MsgFileDisputeResponse {}
+

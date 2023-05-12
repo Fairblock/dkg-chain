@@ -1,0 +1,12 @@
+syntax = "proto3";
+package dkg.dkg;
+
+import "gogoproto/gogo.proto";
+import "dkg/dkg/params.proto";
+
+option go_package = "dkg/x/dkg/types";
+
+// GenesisState defines the dkg module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
