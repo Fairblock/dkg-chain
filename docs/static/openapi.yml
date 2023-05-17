@@ -66997,6 +66997,8 @@ definitions:
     type: object
   dkg.dkg.MsgRefundMsgRequestResponse:
     type: object
+  dkg.dkg.MsgStartKeygenResponse:
+    type: object
   dkg.dkg.Params:
     type: object
     description: Params defines the parameters for the module.

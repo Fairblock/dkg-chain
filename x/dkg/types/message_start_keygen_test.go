@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgFileDispute_ValidateBasic(t *testing.T) {
+func TestMsgStartKeygen_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgFileDispute
+		msg  MsgStartKeygen
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgFileDispute{
+			msg: MsgStartKeygen{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgFileDispute{
+			msg: MsgStartKeygen{
 				Creator: sample.AccAddress(),
 			},
 		},

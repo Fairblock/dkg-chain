@@ -15,6 +15,7 @@ option go_package = "dkg/x/dkg/types";
 service Msg {
   rpc RefundMsgRequest (MsgRefundMsgRequest) returns (MsgRefundMsgRequestResponse);
   rpc FileDispute      (MsgFileDispute     ) returns (MsgFileDisputeResponse     );
+  rpc StartKeygen      (MsgStartKeygen     ) returns (MsgStartKeygenResponse     );
 }
 message MsgRefundMsgRequest {
   string              creator       = 1;
@@ -29,4 +30,14 @@ message MsgFileDispute {
 }
 
 message MsgFileDisputeResponse {}
+
+message MsgStartKeygen {
+  string creator      = 1;
+  string keyID        = 2;
+  string threshold    = 3;
+  string timeout      = 4;
+  string participants = 5;
+}
+
+message MsgStartKeygenResponse {}
 

@@ -12,20 +12,28 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdFileDispute() *cobra.Command {
+func CmdStartKeygen() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "file-dispute",
-		Short: "Broadcast message file-dispute",
-		Args:  cobra.ExactArgs(0),
+		Use:   "start-keygen [key-id] [threshold] [timeout] [participants]",
+		Short: "Broadcast message startKeygen",
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			argKeyID := args[0]
+			argThreshold := args[1]
+			argTimeout := args[2]
+			argParticipants := args[3]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgFileDispute(
+			msg := types.NewMsgStartKeygen(
 				clientCtx.GetFromAddress().String(),
+				argKeyID,
+				argThreshold,
+				argTimeout,
+				argParticipants,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -207,41 +207,161 @@ func (m *MsgFileDisputeResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgFileDisputeResponse proto.InternalMessageInfo
 
+type MsgStartKeygen struct {
+	Creator      string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	KeyID        string `protobuf:"bytes,2,opt,name=keyID,proto3" json:"keyID,omitempty"`
+	Threshold    string `protobuf:"bytes,3,opt,name=threshold,proto3" json:"threshold,omitempty"`
+	Timeout      string `protobuf:"bytes,4,opt,name=timeout,proto3" json:"timeout,omitempty"`
+	Participants string `protobuf:"bytes,5,opt,name=participants,proto3" json:"participants,omitempty"`
+}
+
+func (m *MsgStartKeygen) Reset()         { *m = MsgStartKeygen{} }
+func (m *MsgStartKeygen) String() string { return proto.CompactTextString(m) }
+func (*MsgStartKeygen) ProtoMessage()    {}
+func (*MsgStartKeygen) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1a4aecb3c66a91d8, []int{4}
+}
+func (m *MsgStartKeygen) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgStartKeygen) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgStartKeygen.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgStartKeygen) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgStartKeygen.Merge(m, src)
+}
+func (m *MsgStartKeygen) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgStartKeygen) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgStartKeygen.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgStartKeygen proto.InternalMessageInfo
+
+func (m *MsgStartKeygen) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgStartKeygen) GetKeyID() string {
+	if m != nil {
+		return m.KeyID
+	}
+	return ""
+}
+
+func (m *MsgStartKeygen) GetThreshold() string {
+	if m != nil {
+		return m.Threshold
+	}
+	return ""
+}
+
+func (m *MsgStartKeygen) GetTimeout() string {
+	if m != nil {
+		return m.Timeout
+	}
+	return ""
+}
+
+func (m *MsgStartKeygen) GetParticipants() string {
+	if m != nil {
+		return m.Participants
+	}
+	return ""
+}
+
+type MsgStartKeygenResponse struct {
+}
+
+func (m *MsgStartKeygenResponse) Reset()         { *m = MsgStartKeygenResponse{} }
+func (m *MsgStartKeygenResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgStartKeygenResponse) ProtoMessage()    {}
+func (*MsgStartKeygenResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1a4aecb3c66a91d8, []int{5}
+}
+func (m *MsgStartKeygenResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgStartKeygenResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgStartKeygenResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgStartKeygenResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgStartKeygenResponse.Merge(m, src)
+}
+func (m *MsgStartKeygenResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgStartKeygenResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgStartKeygenResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgStartKeygenResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgRefundMsgRequest)(nil), "dkg.dkg.MsgRefundMsgRequest")
 	proto.RegisterType((*MsgRefundMsgRequestResponse)(nil), "dkg.dkg.MsgRefundMsgRequestResponse")
 	proto.RegisterType((*MsgFileDispute)(nil), "dkg.dkg.MsgFileDispute")
 	proto.RegisterType((*MsgFileDisputeResponse)(nil), "dkg.dkg.MsgFileDisputeResponse")
+	proto.RegisterType((*MsgStartKeygen)(nil), "dkg.dkg.MsgStartKeygen")
+	proto.RegisterType((*MsgStartKeygenResponse)(nil), "dkg.dkg.MsgStartKeygenResponse")
 }
 
 func init() { proto.RegisterFile("dkg/dkg/tx.proto", fileDescriptor_1a4aecb3c66a91d8) }
 
 var fileDescriptor_1a4aecb3c66a91d8 = []byte{
-	// 381 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x52, 0xc1, 0xce, 0xd2, 0x40,
-	0x10, 0x66, 0x25, 0x81, 0xb8, 0x20, 0x92, 0x4a, 0xb4, 0x54, 0x2d, 0xa4, 0xf1, 0x80, 0x26, 0x6c,
-	0x23, 0x3e, 0x01, 0xc4, 0x68, 0x38, 0xf4, 0xd2, 0x83, 0x07, 0x2f, 0xa4, 0xed, 0x0e, 0x6b, 0x53,
-	0xe8, 0xd6, 0x4e, 0x9b, 0xc0, 0x5b, 0xf8, 0x14, 0x3e, 0x81, 0xaf, 0x60, 0x62, 0x3c, 0x71, 0xf4,
-	0x64, 0x0c, 0xbc, 0x85, 0xa7, 0x3f, 0xed, 0xb6, 0x09, 0x7f, 0x7e, 0xf8, 0x0f, 0x9b, 0x9d, 0x99,
-	0x6f, 0xe6, 0xcb, 0x7c, 0x33, 0x43, 0xfb, 0x3c, 0x12, 0x76, 0xf1, 0xb2, 0x1d, 0x4b, 0x52, 0x99,
-	0x49, 0xad, 0xcd, 0x23, 0xc1, 0x78, 0x24, 0x8c, 0xa1, 0x90, 0x52, 0x6c, 0xc0, 0x2e, 0xc3, 0x7e,
-	0xbe, 0xb6, 0xbd, 0x78, 0xaf, 0x72, 0x8c, 0x81, 0x90, 0x42, 0x96, 0xa6, 0x5d, 0x58, 0x55, 0x74,
-	0x18, 0x48, 0xdc, 0x4a, 0x5c, 0x29, 0x40, 0x39, 0x0a, 0xb2, 0x7e, 0x12, 0xfa, 0xc4, 0x41, 0xe1,
-	0xc2, 0x3a, 0x8f, 0x79, 0x69, 0x7c, 0xcd, 0x01, 0x33, 0x4d, 0xa7, 0xed, 0x20, 0x05, 0x2f, 0x93,
-	0xa9, 0x4e, 0xc6, 0x64, 0xf2, 0xd0, 0xad, 0x5d, 0x6d, 0x49, 0x5b, 0x08, 0x31, 0x87, 0x54, 0x7f,
-	0x30, 0x26, 0x93, 0xee, 0xe2, 0xed, 0xff, 0xbf, 0xa3, 0xa9, 0x08, 0xb3, 0x2f, 0xb9, 0xcf, 0x02,
-	0xb9, 0xad, 0xe8, 0xab, 0x6f, 0x8a, 0x3c, 0xb2, 0xb3, 0x7d, 0x02, 0xc8, 0xe6, 0x41, 0x30, 0xe7,
-	0x3c, 0x05, 0x44, 0xb7, 0x22, 0xd0, 0x96, 0xf4, 0x51, 0x18, 0xc7, 0x90, 0xae, 0xb6, 0x80, 0xe8,
-	0x09, 0xd0, 0x9b, 0x63, 0x32, 0xe9, 0xcc, 0x06, 0x4c, 0x09, 0x64, 0xb5, 0x40, 0x36, 0x8f, 0xf7,
-	0x8b, 0xde, 0xef, 0x1f, 0x53, 0xaa, 0xfa, 0xf4, 0xfc, 0x0d, 0xb8, 0xdd, 0xb2, 0xd4, 0x51, 0x95,
-	0xd6, 0x4b, 0xfa, 0xfc, 0x82, 0x0c, 0x17, 0x30, 0x91, 0x31, 0x82, 0xf5, 0x86, 0xf6, 0x1c, 0x14,
-	0x1f, 0xc2, 0x0d, 0xbc, 0x0f, 0x31, 0xc9, 0x33, 0xb8, 0x2e, 0xd0, 0xd2, 0xe9, 0xd3, 0xdb, 0xb9,
-	0x35, 0xcb, 0xec, 0x3b, 0xa1, 0x4d, 0x07, 0x85, 0xf6, 0x89, 0xf6, 0xef, 0x0c, 0xec, 0x05, 0xab,
-	0xd6, 0xc3, 0x2e, 0xf4, 0x61, 0xbc, 0xba, 0x0f, 0xad, 0xf9, 0xb5, 0x8f, 0xb4, 0x73, 0xde, 0xe2,
-	0xb3, 0xf3, 0xa2, 0x33, 0xc0, 0x18, 0x5d, 0x01, 0x6a, 0xa2, 0xc5, 0xeb, 0x5f, 0x47, 0x93, 0x1c,
-	0x8e, 0x26, 0xf9, 0x77, 0x34, 0xc9, 0xb7, 0x93, 0xd9, 0x38, 0x9c, 0xcc, 0xc6, 0x9f, 0x93, 0xd9,
-	0xf8, 0xfc, 0xb8, 0x38, 0xa9, 0x9d, 0x3a, 0xac, 0x62, 0x2d, 0x7e, 0xab, 0x1c, 0xf2, 0xbb, 0x9b,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0x81, 0x28, 0xc5, 0x4a, 0x70, 0x02, 0x00, 0x00,
+	// 473 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x53, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0xcd, 0x52, 0xda, 0x2a, 0xdb, 0x50, 0x2a, 0x13, 0x81, 0x1b, 0x8a, 0x1b, 0x45, 0x1c, 0x02,
+	0x52, 0x6c, 0x51, 0xbe, 0x20, 0x51, 0x05, 0x8a, 0x50, 0x2e, 0x46, 0xe2, 0xc0, 0xa5, 0x72, 0xbc,
+	0xd3, 0x8d, 0xe5, 0x64, 0xd7, 0xec, 0xac, 0xa5, 0xfa, 0x2f, 0xf8, 0x00, 0x3e, 0x83, 0x5f, 0x40,
+	0x42, 0x9c, 0x7a, 0xe4, 0x84, 0x50, 0xf2, 0x01, 0xdc, 0x39, 0x21, 0xef, 0x3a, 0xe0, 0x88, 0xb4,
+	0x07, 0xcb, 0x33, 0xf3, 0x76, 0x9e, 0xe6, 0xbd, 0x9d, 0xa5, 0x47, 0x2c, 0xe5, 0x41, 0xf9, 0xe9,
+	0x2b, 0x3f, 0x53, 0x52, 0x4b, 0x67, 0x9f, 0xa5, 0xdc, 0x67, 0x29, 0xef, 0x1c, 0x73, 0x29, 0xf9,
+	0x1c, 0x02, 0x53, 0x9e, 0xe6, 0x97, 0x41, 0x24, 0x0a, 0x7b, 0xa6, 0xd3, 0xe6, 0x92, 0x4b, 0x13,
+	0x06, 0x65, 0x54, 0x55, 0x8f, 0x63, 0x89, 0x0b, 0x89, 0x17, 0x16, 0xb0, 0x89, 0x85, 0x7a, 0x5f,
+	0x08, 0x7d, 0x30, 0x41, 0x1e, 0xc2, 0x65, 0x2e, 0x98, 0x09, 0x3e, 0xe4, 0x80, 0xda, 0x71, 0xe9,
+	0x7e, 0xac, 0x20, 0xd2, 0x52, 0xb9, 0xa4, 0x4b, 0xfa, 0xcd, 0x70, 0x9d, 0x3a, 0x63, 0xba, 0x87,
+	0x20, 0x18, 0x28, 0xf7, 0x4e, 0x97, 0xf4, 0x5b, 0xa3, 0x17, 0xbf, 0x7f, 0x9c, 0x0e, 0x78, 0xa2,
+	0x67, 0xf9, 0xd4, 0x8f, 0xe5, 0xa2, 0xa2, 0xaf, 0x7e, 0x03, 0x64, 0x69, 0xa0, 0x8b, 0x0c, 0xd0,
+	0x1f, 0xc6, 0xf1, 0x90, 0x31, 0x05, 0x88, 0x61, 0x45, 0xe0, 0x8c, 0xe9, 0xbd, 0x44, 0x08, 0x50,
+	0x17, 0x0b, 0x40, 0x8c, 0x38, 0xb8, 0x3b, 0x5d, 0xd2, 0x3f, 0x38, 0x6b, 0xfb, 0x56, 0xa0, 0xbf,
+	0x16, 0xe8, 0x0f, 0x45, 0x31, 0x3a, 0xfc, 0xf6, 0x79, 0x40, 0xed, 0x9c, 0xd1, 0x74, 0x0e, 0x61,
+	0xcb, 0xb4, 0x4e, 0x6c, 0x67, 0xef, 0x09, 0x7d, 0xbc, 0x45, 0x46, 0x08, 0x98, 0x49, 0x81, 0xd0,
+	0x7b, 0x4e, 0x0f, 0x27, 0xc8, 0x5f, 0x25, 0x73, 0x38, 0x4f, 0x30, 0xcb, 0x35, 0xdc, 0x2c, 0xb0,
+	0xe7, 0xd2, 0x87, 0x9b, 0x67, 0xff, 0xb2, 0x7c, 0x22, 0x86, 0xe6, 0xad, 0x8e, 0x94, 0x7e, 0x03,
+	0x05, 0x07, 0x71, 0x8b, 0x4f, 0x6d, 0xba, 0x9b, 0x42, 0x31, 0x3e, 0x37, 0x36, 0x35, 0x43, 0x9b,
+	0x38, 0x27, 0xb4, 0xa9, 0x67, 0x0a, 0x70, 0x26, 0xe7, 0xcc, 0xc8, 0x6d, 0x86, 0xff, 0x0a, 0x25,
+	0x9b, 0x4e, 0x16, 0x20, 0x73, 0xed, 0xde, 0xb5, 0x6c, 0x55, 0xea, 0xf4, 0x68, 0x2b, 0x8b, 0x94,
+	0x4e, 0xe2, 0x24, 0x8b, 0x84, 0x46, 0x77, 0xd7, 0xc0, 0x1b, 0xb5, 0x6a, 0xf0, 0xda, 0x74, 0xeb,
+	0xc1, 0xcf, 0x7e, 0x11, 0xba, 0x33, 0x41, 0xee, 0xbc, 0xa3, 0x47, 0xff, 0xdd, 0xf4, 0x89, 0x5f,
+	0xed, 0x95, 0xbf, 0xc5, 0xc0, 0xce, 0xd3, 0xdb, 0xd0, 0x35, 0xbf, 0xf3, 0x9a, 0x1e, 0xd4, 0xbd,
+	0x7d, 0x54, 0x6f, 0xaa, 0x01, 0x9d, 0xd3, 0x1b, 0x80, 0x3a, 0x51, 0xdd, 0xdd, 0x0d, 0xa2, 0x1a,
+	0xb0, 0x49, 0xb4, 0x45, 0xf1, 0xe8, 0xd9, 0xd7, 0xa5, 0x47, 0xae, 0x97, 0x1e, 0xf9, 0xb9, 0xf4,
+	0xc8, 0xc7, 0x95, 0xd7, 0xb8, 0x5e, 0x79, 0x8d, 0xef, 0x2b, 0xaf, 0xf1, 0xfe, 0x7e, 0xf9, 0xa8,
+	0xae, 0xec, 0xd3, 0x2a, 0x17, 0x73, 0xba, 0x67, 0xd6, 0xec, 0xe5, 0x9f, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x20, 0x0d, 0x2e, 0x7d, 0x72, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -258,6 +378,7 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	RefundMsgRequest(ctx context.Context, in *MsgRefundMsgRequest, opts ...grpc.CallOption) (*MsgRefundMsgRequestResponse, error)
 	FileDispute(ctx context.Context, in *MsgFileDispute, opts ...grpc.CallOption) (*MsgFileDisputeResponse, error)
+	StartKeygen(ctx context.Context, in *MsgStartKeygen, opts ...grpc.CallOption) (*MsgStartKeygenResponse, error)
 }
 
 type msgClient struct {
@@ -286,10 +407,20 @@ func (c *msgClient) FileDispute(ctx context.Context, in *MsgFileDispute, opts ..
 	return out, nil
 }
 
+func (c *msgClient) StartKeygen(ctx context.Context, in *MsgStartKeygen, opts ...grpc.CallOption) (*MsgStartKeygenResponse, error) {
+	out := new(MsgStartKeygenResponse)
+	err := c.cc.Invoke(ctx, "/dkg.dkg.Msg/StartKeygen", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	RefundMsgRequest(context.Context, *MsgRefundMsgRequest) (*MsgRefundMsgRequestResponse, error)
 	FileDispute(context.Context, *MsgFileDispute) (*MsgFileDisputeResponse, error)
+	StartKeygen(context.Context, *MsgStartKeygen) (*MsgStartKeygenResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -301,6 +432,9 @@ func (*UnimplementedMsgServer) RefundMsgRequest(ctx context.Context, req *MsgRef
 }
 func (*UnimplementedMsgServer) FileDispute(ctx context.Context, req *MsgFileDispute) (*MsgFileDisputeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FileDispute not implemented")
+}
+func (*UnimplementedMsgServer) StartKeygen(ctx context.Context, req *MsgStartKeygen) (*MsgStartKeygenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartKeygen not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -343,6 +477,24 @@ func _Msg_FileDispute_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_StartKeygen_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgStartKeygen)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).StartKeygen(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/dkg.dkg.Msg/StartKeygen",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).StartKeygen(ctx, req.(*MsgStartKeygen))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "dkg.dkg.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -354,6 +506,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FileDispute",
 			Handler:    _Msg_FileDispute_Handler,
+		},
+		{
+			MethodName: "StartKeygen",
+			Handler:    _Msg_StartKeygen_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -485,6 +641,87 @@ func (m *MsgFileDisputeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgStartKeygen) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgStartKeygen) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgStartKeygen) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Participants) > 0 {
+		i -= len(m.Participants)
+		copy(dAtA[i:], m.Participants)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Participants)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.Timeout) > 0 {
+		i -= len(m.Timeout)
+		copy(dAtA[i:], m.Timeout)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Timeout)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Threshold) > 0 {
+		i -= len(m.Threshold)
+		copy(dAtA[i:], m.Threshold)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Threshold)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.KeyID) > 0 {
+		i -= len(m.KeyID)
+		copy(dAtA[i:], m.KeyID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.KeyID)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgStartKeygenResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgStartKeygenResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgStartKeygenResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -540,6 +777,44 @@ func (m *MsgFileDispute) Size() (n int) {
 }
 
 func (m *MsgFileDisputeResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgStartKeygen) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.KeyID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Threshold)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Timeout)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Participants)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgStartKeygenResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -865,6 +1140,266 @@ func (m *MsgFileDisputeResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgFileDisputeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgStartKeygen) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgStartKeygen: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgStartKeygen: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field KeyID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.KeyID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Threshold", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Threshold = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Timeout", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Timeout = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Participants", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Participants = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgStartKeygenResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgStartKeygenResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgStartKeygenResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

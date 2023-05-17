@@ -7,9 +7,9 @@ import (
 
 	"dkg/x/dkg/types"
 
-//	dsp "github.com/FairBlock/eth-dkg-go"
+	//	dsp "github.com/FairBlock/eth-dkg-go"
 
-//	bls "github.com/drand/kyber-bls12381"
+	//	bls "github.com/drand/kyber-bls12381"
 
 	//"github.com/cosmos/cosmos-sdk/store/prefix"
 
@@ -62,7 +62,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	// }
 
 	// return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: slashed}, nil
-return nil,nil
+	return nil, nil
 }
 
 func (k Keeper) GetDisputeCount(ctx sdk.Context) uint64 {
@@ -72,7 +72,7 @@ func (k Keeper) GetDisputeCount(ctx sdk.Context) uint64 {
 	// if bz == nil {
 	// 	return 0
 	// }
-return 0
+	return 0
 	// return binary.BigEndian.Uint64(bz)
 }
 

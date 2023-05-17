@@ -32,6 +32,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgFileDispute int = 100
 
+	opWeightMsgStartKeygen = "op_weight_msg_start_keygen"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgStartKeygen int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -86,6 +90,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgFileDispute,
 		dkgsimulation.SimulateMsgFileDispute(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgStartKeygen int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgStartKeygen, &weightMsgStartKeygen, nil,
+		func(_ *rand.Rand) {
+			weightMsgStartKeygen = defaultWeightMsgStartKeygen
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgStartKeygen,
+		dkgsimulation.SimulateMsgStartKeygen(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
