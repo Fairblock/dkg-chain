@@ -1,0 +1,10 @@
+syntax = "proto3";
+package dkg.dkg;
+
+option go_package = "dkg/x/dkg/types";
+
+message Share {
+    bytes Value = 1;
+    bytes Index = 2;
+    uint64 Id = 3;
+}

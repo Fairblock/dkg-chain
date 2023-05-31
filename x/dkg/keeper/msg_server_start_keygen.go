@@ -16,6 +16,9 @@ func (k msgServer) StartKeygen(goCtx context.Context, msg *types.MsgStartKeygen)
 	event := sdk.NewEvent(
 		types.EventTypeKeygen,
 		sdk.NewAttribute(types.AttributeValueStart, msg.KeyID),
+		sdk.NewAttribute("threshold", msg.Threshold),
+		sdk.NewAttribute("participants", msg.Participants),
+		sdk.NewAttribute("timeout", msg.Timeout),
 		sdk.NewAttribute("module", "dkg"),
 	)
 	ctx.EventManager().EmitEvent(event)

@@ -9,12 +9,15 @@ import (
 
 func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundMsgRequest) (*types.MsgRefundMsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	//s := string(msg.Sender)
+	b,_ :=msg.Marshal()
 
+//panic(b)
 	// TODO: Handling the message
 	_ = ctx
 	event := sdk.NewEvent(
 		types.EventTypeKeygen,
-		sdk.NewAttribute(types.AttributeValueMsg, msg.GetInnerMessage().String()),
+		sdk.NewAttribute(types.AttributeValueMsg,string(b)),
 		sdk.NewAttribute("module", "dkg"),
 	)
 	ctx.EventManager().EmitEvent(event)

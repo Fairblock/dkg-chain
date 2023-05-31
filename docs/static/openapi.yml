@@ -66993,8 +66993,64 @@ definitions:
             NOTE: The amount field is an Int which implements the custom method
             signatures required by gogoproto.
     description: Period defines a length of time and amount of coins that will vest.
+  dkg.dkg.Commit:
+    type: object
+    properties:
+      Commitments:
+        type: array
+        items:
+          type: string
+          format: byte
+  dkg.dkg.Dispute:
+    type: object
+    properties:
+      AddressOfAccuser:
+        type: string
+        format: byte
+      AddressOfAccusee:
+        type: string
+        format: byte
+      share:
+        type: object
+        properties:
+          Value:
+            type: string
+            format: byte
+          Index:
+            type: string
+            format: byte
+          Id:
+            type: string
+            format: uint64
+      commit:
+        type: object
+        properties:
+          Commitments:
+            type: array
+            items:
+              type: string
+              format: byte
+      kij:
+        type: string
+        format: byte
+      cZkProof:
+        type: string
+        format: byte
+        title: bytes zkProof = 6;
+      rZkProof:
+        type: string
+        format: byte
+      id:
+        type: string
+        format: uint64
   dkg.dkg.MsgFileDisputeResponse:
     type: object
+    properties:
+      verdict:
+        type: boolean
+      idOfSlashedValidator:
+        type: string
+        format: byte
   dkg.dkg.MsgRefundMsgRequestResponse:
     type: object
   dkg.dkg.MsgStartKeygenResponse:
@@ -67009,6 +67065,18 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
     description: QueryParamsResponse is response type for the Query/Params RPC method.
+  dkg.dkg.Share:
+    type: object
+    properties:
+      Value:
+        type: string
+        format: byte
+      Index:
+        type: string
+        format: byte
+      Id:
+        type: string
+        format: uint64
   ibc.applications.interchain_accounts.controller.v1.MsgRegisterInterchainAccountResponse:
     type: object
     properties:

@@ -1,7 +1,9 @@
 syntax = "proto3";
 
 package dkg.dkg;
-
+import "dkg/dkg/share.proto";
+import "dkg/dkg/commit.proto";
+import "dkg/dkg/dispute.proto";
 import "google/protobuf/any.proto";
 import "gogoproto/gogo.proto";
 
@@ -27,9 +29,16 @@ message MsgRefundMsgRequestResponse {}
 
 message MsgFileDispute {
   string creator = 1;
+  Dispute dispute = 2;
+  uint64 idOfAccuser = 3;
+  string keyId = 4;
 }
 
-message MsgFileDisputeResponse {}
+message MsgFileDisputeResponse {
+  bool verdict = 1;
+  bytes idOfSlashedValidator = 2;
+}
+
 
 message MsgStartKeygen {
   string creator      = 1;

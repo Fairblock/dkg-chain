@@ -3,6 +3,7 @@ module dkg
 go 1.18
 
 require (
+	github.com/FairBlock/vsskyber v0.0.0-20230410225209-7d0e3320c241
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8
 	github.com/cosmos/cosmos-sdk v0.46.7
 	github.com/cosmos/ibc-go/v6 v6.1.0
@@ -22,6 +23,8 @@ require (
 	google.golang.org/grpc v1.53.0
 	gopkg.in/yaml.v2 v2.4.0
 )
+
+require github.com/kilic/bls12-381 v0.1.0 // indirect
 
 require (
 	cloud.google.com/go v0.107.0 // indirect
@@ -61,6 +64,8 @@ require (
 	github.com/dgraph-io/badger/v2 v2.2007.4 // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
+	github.com/drand/kyber v1.2.0
+	github.com/drand/kyber-bls12381 v0.2.6
 	github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac // indirect
 	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
 	github.com/felixge/httpsnoop v1.0.1 // indirect

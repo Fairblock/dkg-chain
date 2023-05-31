@@ -17,14 +17,19 @@ const (
 	EventTypeKeygen = "keygen"
 )
 const (
+	
 	AttributeValueSend     = "send"
 	AttributeValueStart    = "start"
 	AttributeValueMsg      = "message"
 	AttributeValueDecided  = "decided"
 	AttributeValueReject   = "reject"
 	AttributeValueAssigned = "assigned"
+	AttributeValueDispute  = "dispute"
 )
-
+const (
+	DisputeKey      = "Dispute/value/"
+	DisputeCountKey = "Commit/count/"
+)
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }

@@ -1,0 +1,20 @@
+syntax = "proto3";
+package dkg.dkg;
+
+option go_package = "dkg/x/dkg/types";
+import "dkg/dkg/commit.proto";
+import "dkg/dkg/share.proto";
+
+
+message Dispute {
+    bytes AddressOfAccuser = 1;
+    bytes AddressOfAccusee = 2;
+    Share share = 3;
+    Commit commit = 4;
+    bytes kij = 5;
+    //bytes zkProof = 6;
+    bytes cZkProof = 6;
+    bytes rZkProof = 7;
+    uint64 id = 8;
+  
+}

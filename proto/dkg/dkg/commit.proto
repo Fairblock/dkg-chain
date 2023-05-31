@@ -1,0 +1,10 @@
+syntax = "proto3";
+package dkg.dkg;
+
+option go_package = "dkg/x/dkg/types";
+
+
+message Commit {
+    repeated bytes Commitments = 1;
+
+  }
