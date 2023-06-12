@@ -16,5 +16,8 @@ message Dispute {
     bytes cZkProof = 6;
     bytes rZkProof = 7;
     uint64 id = 8;
+    uint64 accuserId = 9;
+    uint64 faulterId = 10;
+    bytes cReal = 11;
   
 }

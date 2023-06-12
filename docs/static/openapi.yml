@@ -67043,6 +67043,15 @@ definitions:
       id:
         type: string
         format: uint64
+      accuserId:
+        type: string
+        format: uint64
+      faulterId:
+        type: string
+        format: uint64
+      cReal:
+        type: string
+        format: byte
   dkg.dkg.MsgFileDisputeResponse:
     type: object
     properties:
