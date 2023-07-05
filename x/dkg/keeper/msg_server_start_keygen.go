@@ -11,7 +11,7 @@ func (k msgServer) StartKeygen(goCtx context.Context, msg *types.MsgStartKeygen)
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// TODO: Handling the message
-
+	k.InitCounter(ctx)
 	_ = ctx
 	event := sdk.NewEvent(
 		types.EventTypeKeygen,
