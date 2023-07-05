@@ -24,6 +24,46 @@ accounts:
   coins:
   - 10000token
   - 100000000stake
+- name: sahar
+  coins:
+  - 10000token
+  - 100000000stake
+- name: bahar
+  coins:
+  - 10000token
+  - 100000000stake
+- name: negar
+  coins:
+  - 10000token
+  - 100000000stake
+- name: sima
+  coins:
+  - 10000token
+  - 100000000stake
+- name: nahid
+  coins:
+  - 10000token
+  - 100000000stake
+- name: sepid
+  coins:
+  - 10000token
+  - 100000000stake
+- name: sama
+  coins:
+  - 10000token
+  - 100000000stake
+- name: sadaf
+  coins:
+  - 10000token
+  - 100000000stake
+- name: david
+  coins:
+  - 10000token
+  - 100000000stake
+- name: dina
+  coins:
+  - 10000token
+  - 100000000stake
 client:
   openapi:
     path: docs/static/openapi.yml
