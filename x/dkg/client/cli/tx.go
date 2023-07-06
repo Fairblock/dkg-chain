@@ -34,6 +34,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdFileDispute())
 	cmd.AddCommand(CmdStartKeygen())
 	cmd.AddCommand(CmdKeygenResult())
+	cmd.AddCommand(CmdTimeout())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

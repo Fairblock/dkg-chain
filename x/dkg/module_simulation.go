@@ -40,6 +40,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgKeygenResult int = 100
 
+	opWeightMsgTimeout = "op_weight_msg_timeout"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgTimeout int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -116,6 +120,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgKeygenResult,
 		dkgsimulation.SimulateMsgKeygenResult(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgTimeout int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgTimeout, &weightMsgTimeout, nil,
+		func(_ *rand.Rand) {
+			weightMsgTimeout = defaultWeightMsgTimeout
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgTimeout,
+		dkgsimulation.SimulateMsgTimeout(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

@@ -20,6 +20,7 @@ service Msg {
   rpc FileDispute      (MsgFileDispute     ) returns (MsgFileDisputeResponse     );
   rpc StartKeygen      (MsgStartKeygen     ) returns (MsgStartKeygenResponse     );
   rpc KeygenResult     (MsgKeygenResult    ) returns (MsgKeygenResultResponse    );
+  rpc Timeout          (MsgTimeout         ) returns (MsgTimeoutResponse         );
 }
 message MsgRefundMsgRequest {
   string              creator       = 1;
@@ -58,4 +59,12 @@ message MsgKeygenResult {
 }
 
 message MsgKeygenResultResponse {}
+
+message MsgTimeout {
+  string creator = 1;
+  string round   = 2;
+  string id      = 3;
+}
+
+message MsgTimeoutResponse {}
 

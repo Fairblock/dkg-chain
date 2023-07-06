@@ -12,6 +12,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgFileDispute{}, "dkg/FileDispute", nil)
 	cdc.RegisterConcrete(&MsgStartKeygen{}, "dkg/StartKeygen", nil)
 	cdc.RegisterConcrete(&MsgKeygenResult{}, "dkg/KeygenResult", nil)
+	cdc.RegisterConcrete(&MsgTimeout{}, "dkg/Timeout", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -27,6 +28,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgKeygenResult{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgTimeout{},
 	)
 	// this line is used by starport scaffolding # 3
 
