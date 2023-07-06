@@ -1,46 +1,35 @@
 package cli
 
 import (
-	"encoding/json"
 	"strconv"
 
 	"dkg/x/dkg/types"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	types1 "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/spf13/cobra"
-
-	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 )
 
 var _ = strconv.Itoa(0)
 
-func CmdRefundMsgRequest() *cobra.Command {
+func CmdKeygenResult() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "refund-msg-request [creator] [sender] [inner-message]",
-		Short: "Broadcast message RefundMsgRequest",
-		Args:  cobra.ExactArgs(3),
+		Use:   "keygen-result [mpk] [commitment]",
+		Short: "Broadcast message keygen-result",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argAddr := new(github_com_cosmos_cosmos_sdk_types.AccAddress)
-			argMsg := new(types1.Any)
+			argMpk := args[0]
+			argCommitment := args[1]
 
-			err = json.Unmarshal([]byte(args[1]), argAddr)
-			err = json.Unmarshal([]byte(args[2]), argMsg)
-			if err != nil {
-				return err
-			}
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgRefundMsgRequest(
+			msg := types.NewMsgKeygenResult(
 				clientCtx.GetFromAddress().String(),
-
-				*argAddr,
-				argMsg,
+				argMpk,
+				argCommitment,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -67060,6 +67060,8 @@ definitions:
       idOfSlashedValidator:
         type: string
         format: byte
+  dkg.dkg.MsgKeygenResultResponse:
+    type: object
   dkg.dkg.MsgRefundMsgRequestResponse:
     type: object
   dkg.dkg.MsgStartKeygenResponse:

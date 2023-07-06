@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package dkg.dkg;
+
 import "dkg/dkg/share.proto";
 import "dkg/dkg/commit.proto";
 import "dkg/dkg/dispute.proto";
@@ -18,6 +19,7 @@ service Msg {
   rpc RefundMsgRequest (MsgRefundMsgRequest) returns (MsgRefundMsgRequestResponse);
   rpc FileDispute      (MsgFileDispute     ) returns (MsgFileDisputeResponse     );
   rpc StartKeygen      (MsgStartKeygen     ) returns (MsgStartKeygenResponse     );
+  rpc KeygenResult     (MsgKeygenResult    ) returns (MsgKeygenResultResponse    );
 }
 message MsgRefundMsgRequest {
   string              creator       = 1;
@@ -28,17 +30,16 @@ message MsgRefundMsgRequest {
 message MsgRefundMsgRequestResponse {}
 
 message MsgFileDispute {
-  string creator = 1;
-  Dispute dispute = 2;
-  uint64 idOfAccuser = 3;
-  string keyId = 4;
+  string  creator     = 1;
+  Dispute dispute     = 2;
+  uint64  idOfAccuser = 3;
+  string  keyId       = 4;
 }
 
 message MsgFileDisputeResponse {
-  bool verdict = 1;
+  bool  verdict              = 1;
   bytes idOfSlashedValidator = 2;
 }
-
 
 message MsgStartKeygen {
   string creator      = 1;
@@ -49,4 +50,12 @@ message MsgStartKeygen {
 }
 
 message MsgStartKeygenResponse {}
+
+message MsgKeygenResult {
+  string creator    = 1;
+  string mpk        = 2;
+  string commitment = 3;
+}
+
+message MsgKeygenResultResponse {}
 

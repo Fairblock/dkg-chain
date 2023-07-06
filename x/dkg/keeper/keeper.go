@@ -45,27 +45,24 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-
-
-
 func (k Keeper) InitCounter(ctx sdk.Context) {
-    store := ctx.KVStore(k.storeKey)
-    counter := types.Counter{Count: 0}
-    store.Set([]byte("counter"), counter.MustMarshalBinaryBare())
+	store := ctx.KVStore(k.storeKey)
+	counter := types.Counter{Count: 0}
+	store.Set([]byte("counter"), counter.MustMarshalBinaryBare())
 }
 
 func (k Keeper) IncreaseCounter(ctx sdk.Context, amount uint64) uint64 {
-    store := ctx.KVStore(k.storeKey)
-    var counter types.Counter
-    bz := store.Get([]byte("counter"))
-    counter.MustUnmarshalBinaryBare(bz)
-    counter.Count += amount
-    store.Set([]byte("counter"), counter.MustMarshalBinaryBare())
+	store := ctx.KVStore(k.storeKey)
+	var counter types.Counter
+	bz := store.Get([]byte("counter"))
+	counter.MustUnmarshalBinaryBare(bz)
+	counter.Count += amount
+	store.Set([]byte("counter"), counter.MustMarshalBinaryBare())
 	return counter.Count
 }
 
 type HandleMsgInitCounter struct {
-    // Add necessary fields, if any
+	// Add necessary fields, if any
 }
 
 // func (msg HandleMsgInitCounter) HandleMsg(ctx sdk.Context, k CounterKeeper) sdk.Result {
