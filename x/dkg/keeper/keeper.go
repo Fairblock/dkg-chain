@@ -65,6 +65,33 @@ type HandleMsgInitCounter struct {
 	// Add necessary fields, if any
 }
 
+func (k Keeper) InitTimeout(ctx sdk.Context, round uint64, timeout uint64, start uint64, id string) {
+	store := ctx.KVStore(k.storeKey)
+	timeoutData := types.TimeoutData{Round: round,Start: start,Timeout: timeout,Id: id}
+	store.Set([]byte("timeoutData"), timeoutData.MustMarshalBinaryBare())
+}
+
+func (k Keeper) GetTimeout(ctx sdk.Context) types.TimeoutData{
+	store := ctx.KVStore(k.storeKey)
+	var timeoutData types.TimeoutData
+	bz := store.Get([]byte("timeoutData"))
+	if bz == nil{
+		return types.TimeoutData{}
+	}
+	timeoutData.MustUnmarshalBinaryBare(bz)
+	return timeoutData
+}
+
+func (k Keeper) NextRound(ctx sdk.Context){
+	store := ctx.KVStore(k.storeKey)
+	var timeoutData types.TimeoutData
+	bz := store.Get([]byte("timeoutData"))
+	timeoutData.MustUnmarshalBinaryBare(bz)
+	timeoutData.Round = timeoutData.Round + 1
+	store.Set([]byte("timeoutData"), timeoutData.MustMarshalBinaryBare())
+
+}
+
 // func (msg HandleMsgInitCounter) HandleMsg(ctx sdk.Context, k CounterKeeper) sdk.Result {
 //     k.InitCounter(ctx)
 //     return sdk.Result{Events: ctx.EventManager().ABCIEvents()}

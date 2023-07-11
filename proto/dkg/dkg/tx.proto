@@ -49,6 +49,12 @@ message MsgStartKeygen {
   string timeout      = 4;
   string participants = 5;
 }
+message TrafficOut {
+  string to_party_uid = 1;
+  bytes payload = 2;
+  bool is_broadcast = 3;
+  string round_num = 4;
+}
 
 message MsgStartKeygenResponse {}
 

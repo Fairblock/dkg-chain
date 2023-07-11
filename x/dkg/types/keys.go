@@ -15,6 +15,7 @@ const (
 )
 const (
 	EventTypeKeygen = "keygen"
+	EventTypeTimeout = "dkg-timeout"
 )
 const (
 	AttributeValueSend     = "send"

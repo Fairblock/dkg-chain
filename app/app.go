@@ -1,10 +1,14 @@
 package app
 
 import (
+	//"context"
+	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -96,6 +100,12 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v6/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
+	"github.com/sirupsen/logrus"
+
+	//"github.com/sirupsen/logrus"
+
+	//"github.com/drand/kyber"
+	bls "github.com/drand/kyber-bls12381"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -106,6 +116,7 @@ import (
 	dkgmodule "dkg/x/dkg"
 	dkgmodulekeeper "dkg/x/dkg/keeper"
 	dkgmoduletypes "dkg/x/dkg/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "dkg/app/params"
@@ -733,12 +744,118 @@ func (app *App) Name() string { return app.BaseApp.Name() }
 
 // BeginBlocker application updates every begin block
 func (app *App) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
+		
 	return app.mm.BeginBlock(ctx, req)
+}
+
+type Bcast struct {
+	UIVssCommit vssCommit `json:"u_i_vss_commit"`
+	ID          uint      `json:"id"`
+}
+
+type vssCommit struct {
+	CoeffCommits [][]byte `json:"coeff_commits"`
 }
 
 // EndBlocker application updates every end block
 func (app *App) EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
+	
+	
+	timeoutData := app.DkgKeeper.GetTimeout(ctx)
+	
+		
+	if timeoutData.Id != "" {
+	desiredHeight := timeoutData.Timeout
+	round := timeoutData.Round
+	start := timeoutData.Start
+	id := timeoutData.Id
+	if ctx.BlockHeight() == int64(uint64(start)+desiredHeight*(round+1)) {
+		// Construct your event with attributes
+		//logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+		event := sdk.NewEvent(
+			"dkg-timeout",
+			sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+			sdk.NewAttribute("id", id),
+			// Add more attributes as needed
+		)
+
+		// Emit the event
+		ctx.EventManager().EmitEvent(event)
+		app.DkgKeeper.NextRound(ctx)
+	}
+	if round == 3 {
+		CalculateMPK(ctx,id)
+		app.DkgKeeper.InitTimeout(ctx,0,0,0,"")
+	}}
 	return app.mm.EndBlock(ctx, req)
+}
+func CalculateMPK(ctx sdk.Context, id string) {
+	events := ctx.EventManager().Events()
+	suite := bls.NewBLS12381Suite()
+
+	mpk := suite.G1().Point()
+	first := true
+	faulters := []uint64{}
+	for _, event := range events {
+		eventType := event.Type
+		attributes := event.Attributes
+		
+		if eventType == "keygen" {
+
+			for _, attribute := range attributes {
+
+				if string(attribute.Key) == "dispute" {
+
+					faulters = append(faulters,  binary.BigEndian.Uint64(attribute.Value))
+					logrus.Info(faulters)
+
+				}}}}
+	for _, event := range events {
+		eventType := event.Type
+		attributes := event.Attributes
+		message := new(dkgmoduletypes.TrafficOut)
+		if eventType == "keygen" {
+
+			for _, attribute := range attributes {
+
+				if string(attribute.Key) == "message" {
+					message.Unmarshal(attribute.Value)
+					if message.RoundNum == "2" {
+						if message.IsBroadcast {
+							var bcast Bcast
+							err := json.Unmarshal(message.Payload, &bcast)
+							if err != nil {
+								logrus.Error("Error:", err)
+							}
+							for i := 0; i < len(faulters); i++ {
+								if faulters[i] == uint64(bcast.ID){
+									break
+								}
+							}
+							if first {
+								mpk.UnmarshalBinary(bcast.UIVssCommit.CoeffCommits[0])
+								first = false
+								break
+							}
+							mpkPrime := suite.G1().Point()
+							mpkPrime.UnmarshalBinary(bcast.UIVssCommit.CoeffCommits[0])
+							mpk = suite.G1().Point().Add(mpk,mpkPrime)
+						}
+					}
+				}
+			}
+		}
+
+	}
+	event := sdk.NewEvent(
+		"dkg-mpk",
+		sdk.NewAttribute("mpk", mpk.String()),
+		sdk.NewAttribute("id", id),
+		// Add more attributes as needed
+	)
+
+	// Emit the event
+	ctx.EventManager().EmitEvent(event)	
 }
 
 // InitChainer application update at chain initialization
