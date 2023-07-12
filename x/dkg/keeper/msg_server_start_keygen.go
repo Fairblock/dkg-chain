@@ -27,6 +27,7 @@ func (k msgServer) StartKeygen(goCtx context.Context, msg *types.MsgStartKeygen)
 	// goCtx = context.WithValue(goCtx, "start", goCtx.Value(ctx.BlockHeight()))
 	// goCtx = context.WithValue(goCtx, "id", msg.KeyID)
 	k.InitTimeout(ctx,0,timeout,uint64(ctx.BlockHeight()),msg.KeyID)
+	k.InitMPK(ctx,msg.KeyID)
 	//logrus.Debug("++++++++++++++++++++++++++++++++++++++++++++",goCtx.Value("id"))	
 	_ = ctx
 	event := sdk.NewEvent(

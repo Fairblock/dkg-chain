@@ -297,6 +297,11 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		sdk.NewAttribute("from", msg.Creator),
 		sdk.NewAttribute("module", "dkg"),
 	)
+
+	
+	faulter, _ := strconv.Atoi(slashed)
+	k.AddFaulter(ctx,uint64(faulter),msg.KeyId)
+
 	ctx.EventManager().EmitEvent(event)
 	return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: []byte(slashed)}, nil
 	//return nil, nil

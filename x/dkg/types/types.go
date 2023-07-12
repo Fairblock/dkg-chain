@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	//"github.com/drand/kyber"
 )
 
 type Counter struct {
@@ -31,6 +32,15 @@ type TimeoutData struct {
 	Start uint64 `json:"start"`
 }
 
+
+    // Initialize the map
+   
+type MPKData struct {
+	Pks map[uint64][]byte `json:"pks"`
+	Id string `json:"id"`
+	
+}
+
 func (t TimeoutData) MustMarshalBinaryBare() []byte {
 	bz, err := json.Marshal(t)
 	if err != nil {
@@ -41,6 +51,20 @@ func (t TimeoutData) MustMarshalBinaryBare() []byte {
 
 func (t *TimeoutData) MustUnmarshalBinaryBare(bz []byte) {
 	if err := json.Unmarshal(bz, t); err != nil {
+		panic(err) // handle the error according to your use case
+	}
+}
+
+func (m MPKData) MustMarshalBinaryBare() []byte {
+	bz, err := json.Marshal(m)
+	if err != nil {
+		panic(err) // handle the error according to your use case
+	}
+	return sdk.MustSortJSON(bz)
+}
+
+func (m *MPKData) MustUnmarshalBinaryBare(bz []byte) {
+	if err := json.Unmarshal(bz, m); err != nil {
 		panic(err) // handle the error according to your use case
 	}
 }

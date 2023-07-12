@@ -2,11 +2,16 @@ package dkg
 
 import (
 	"context"
+	//"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"strconv"
+
 	// this line is used by starport scaffolding # 1
 
+	bls "github.com/drand/kyber-bls12381"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -14,6 +19,7 @@ import (
 	"dkg/x/dkg/client/cli"
 	"dkg/x/dkg/keeper"
 	"dkg/x/dkg/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -153,7 +159,87 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block
 func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
 
+type Bcast struct {
+	UIVssCommit vssCommit `json:"u_i_vss_commit"`
+	ID          uint      `json:"id"`
+}
+
+type vssCommit struct {
+	CoeffCommits [][]byte `json:"coeff_commits"`
+}
+
 // EndBlock contains the logic that is automatically triggered at the end of each block
-func (am AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
+func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
+
+	timeoutData := am.keeper.GetTimeout(ctx)
+
+	if timeoutData.Id != "" {
+		desiredHeight := timeoutData.Timeout
+		round := timeoutData.Round
+		start := timeoutData.Start
+		id := timeoutData.Id
+		if ctx.BlockHeight() == int64(uint64(start)+desiredHeight*(round+1)) {
+			// Construct your event with attributes
+			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+			event := sdk.NewEvent(
+				"dkg-timeout",
+				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+				sdk.NewAttribute("id", id),
+				// Add more attributes as needed
+			)
+
+			// Emit the event
+			ctx.EventManager().EmitEvent(event)
+			am.keeper.NextRound(ctx)
+		}
+		if round == 3 {
+
+			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx))
+			am.keeper.InitTimeout(ctx, 0, 0, 0, "")
+		}
+	}
 	return []abci.ValidatorUpdate{}
+}
+
+func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData) {
+	//logrus.Info("+++++++++++++++++++++++++++++++++++ mpk:", mpkData.Pks)
+	suite := bls.NewBLS12381Suite()
+
+	mpk := suite.G1().Point()
+
+
+	if id != mpkData.Id {
+		logrus.Panic("wrong mpk data")
+	}
+	for i := 0; i < len(mpkData.Pks); i++ {
+		//logrus.Info("+++++++++++++++++++++++++++++++++++  mpk1 :", i)
+		if i == 0 {
+			//logrus.Info("+++++++++++++++++++++++++++++++++++ first mpk part:", mpkData.Pks[uint64(i)])
+			mpk.UnmarshalBinary(mpkData.Pks[uint64(i)])
+			//m, _ := mpk.MarshalBinary()
+			//logrus.Info("+++++++++++++++++++++++++++++++++++ first mpk part:", err)
+			// pkb,_ :=mpk.MarshalBinary()
+			// logrus.Info("+++++++++++++++++++++++++++++++++++  mpk :", pkb)
+			
+			
+		}
+		if i != 0 {
+		mpkPrime := suite.G1().Point()
+		mpkPrime.UnmarshalBinary(mpkData.Pks[uint64(i)])
+		mpk = mpk.Add(mpk, mpkPrime)
+		
+		}
+	
+	}
+	pkb,_ :=mpk.MarshalBinary()
+		//logrus.Info("+++++++++++++++++++++++++++++++++++  mpk2 :", pkb)
+	event := sdk.NewEvent(
+		"dkg-mpk",
+		sdk.NewAttribute("mpk", string(pkb)),
+		sdk.NewAttribute("id", id),
+		// Add more attributes as needed
+	)
+
+	// Emit the event
+	ctx.EventManager().EmitEvent(event)
 }

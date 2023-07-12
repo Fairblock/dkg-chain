@@ -92,6 +92,43 @@ func (k Keeper) NextRound(ctx sdk.Context){
 
 }
 
+func (k Keeper) InitMPK(ctx sdk.Context, id string) {
+	store := ctx.KVStore(k.storeKey)
+	pks := make(map[uint64][]byte)
+	mpkData := types.MPKData{Pks: pks,Id: id}
+	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+}
+
+func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
+	store := ctx.KVStore(k.storeKey)
+	var mpkData types.MPKData
+	bz := store.Get([]byte("mpkData"))
+	mpkData.MustUnmarshalBinaryBare(bz)
+	if (mpkData.Id == dkgId){
+	mpkData.Pks[faulterId] = []byte{0}}
+	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+
+}
+
+func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){
+	store := ctx.KVStore(k.storeKey)
+	var mpkData types.MPKData
+	bz := store.Get([]byte("mpkData"))
+	mpkData.MustUnmarshalBinaryBare(bz)
+	mpkData.Pks[id] = pk
+	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+
+}
+
+
+func (k Keeper) GetMPKData(ctx sdk.Context) types.MPKData{
+	store := ctx.KVStore(k.storeKey)
+	var mpkData types.MPKData
+	bz := store.Get([]byte("mpkData"))
+	mpkData.MustUnmarshalBinaryBare(bz)
+	return mpkData
+
+}
 // func (msg HandleMsgInitCounter) HandleMsg(ctx sdk.Context, k CounterKeeper) sdk.Result {
 //     k.InitCounter(ctx)
 //     return sdk.Result{Events: ctx.EventManager().ABCIEvents()}

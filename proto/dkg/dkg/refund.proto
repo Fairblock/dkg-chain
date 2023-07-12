@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package dkg.dkg;
+
+
+import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
+
+
+
+// import "nexus/exported/v1beta1/types.proto";
+option go_package = "dkg/x/dkg/types";
+
+message MsgRefundMsgRequest {
+  string              creator       = 1;
+  bytes               sender        = 2 [(gogoproto.casttype)             = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  google.protobuf.Any inner_message = 3 ;
+}
