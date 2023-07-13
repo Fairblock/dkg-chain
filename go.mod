@@ -3,7 +3,7 @@ module dkg
 go 1.18
 
 require (
-	github.com/FairBlock/vsskyber v0.0.0-20230410225209-7d0e3320c241
+	github.com/FairBlock/DistributedIBE v0.0.0-20230528025616-f58fb2b93eaf
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8
 	github.com/cosmos/cosmos-sdk v0.46.7
 	github.com/cosmos/ibc-go/v6 v6.1.0
@@ -26,6 +26,7 @@ require (
 )
 
 require (
+	filippo.io/age v1.1.1 // indirect
 	github.com/kilic/bls12-381 v0.1.0 // indirect
 	github.com/onsi/ginkgo v1.16.4 // indirect
 	google.golang.org/genproto v0.0.0-20230526203410-71b5a4ffd15e // indirect
@@ -40,7 +41,7 @@ require (
 	cloud.google.com/go/storage v1.28.1 // indirect
 	cosmossdk.io/errors v1.0.0-beta.7 // indirect
 	cosmossdk.io/math v1.0.0-beta.3 // indirect
-	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
+	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
 	github.com/99designs/keyring v1.2.1 // indirect
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
@@ -170,8 +171,7 @@ require (
 )
 
 replace (
-	github.com/FairBlock/eth-dkg-go => ../eth-dkg-go
-	github.com/FairBlock/vsskyber => ../vsskyber
+	//github.com/FairBlock/vsskyber => ../vsskyber
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 )

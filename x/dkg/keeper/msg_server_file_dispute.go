@@ -31,7 +31,7 @@ import (
 
 	//bls12381 "github.com/kilic/bls12-381"
 
-	vsskyber "github.com/FairBlock/vsskyber"
+	distIBE "github.com/FairBlock/DistributedIBE"
 
 	"github.com/drand/kyber"
 	bls "github.com/drand/kyber-bls12381"
@@ -50,8 +50,8 @@ type zkProof struct {
 type listOfComplaints struct {
 	pubKeyOfAccuser kyber.Point
 	pubKeyOfAccusee kyber.Point
-	share           vsskyber.Share
-	commit          vsskyber.Commitments
+	share           distIBE.Share
+	commit          distIBE.Commitments
 	kij             kyber.Point
 	proof           zkProof
 }
@@ -193,7 +193,7 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 // 			fmt.Println("Accuser is malicous")
 // 			// slash the accuser goes here
 // 		}
-// 		if vsskyber.VerifyShare(listOfComplaints[i].share, listOfComplaints[i].commit) {
+// 		if distIBE.VerifyShare(listOfComplaints[i].share, listOfComplaints[i].commit) {
 // 			fmt.Println("Accusee is malicious")
 // 			//slash the accusee goes here
 // 		} else {
@@ -273,7 +273,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		sharev := bls.NewKyberScalar()
 		sharev.UnmarshalBinary(dispute.Share.Value)
 		//panic(P{Concat: sharev.String(),C:dispute.Share.Index,R:dispute.Share.Value, commits: dispute.Commit.Commitments})
-		verify := vsskyber.VerifyShare(vsskyber.Share{Index: sharei, Value: sharev}, commits)
+		verify := distIBE.VerifyVSSShare(distIBE.Share{Index: sharei, Value: sharev}, commits)
 		if !verify {
 			//panic("accusee")
 			slashed = string(rune(dispute.FaulterId))
