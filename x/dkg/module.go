@@ -202,7 +202,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 }
 
 func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData) {
-	//logrus.Info("+++++++++++++++++++++++++++++++++++ mpk:", mpkData.Pks)
+	logrus.Info("+++++++++++++++++++++++++++++++++++ mpk:", mpkData.Pks)
 	suite := bls.NewBLS12381Suite()
 
 	mpk := suite.G1().Point()
@@ -212,7 +212,7 @@ func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData) {
 		logrus.Panic("wrong mpk data")
 	}
 	for i := 0; i < len(mpkData.Pks); i++ {
-		//logrus.Info("+++++++++++++++++++++++++++++++++++  mpk1 :", i)
+		logrus.Info("+++++++++++++++++++++++++++++++++++  mpk1 :", i)
 		if i == 0 {
 			//logrus.Info("+++++++++++++++++++++++++++++++++++ first mpk part:", mpkData.Pks[uint64(i)])
 			mpk.UnmarshalBinary(mpkData.Pks[uint64(i)])
@@ -225,7 +225,8 @@ func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData) {
 		}
 		if i != 0 {
 		mpkPrime := suite.G1().Point()
-		mpkPrime.UnmarshalBinary(mpkData.Pks[uint64(i)])
+		err := mpkPrime.UnmarshalBinary(mpkData.Pks[uint64(i)])
+		logrus.Info("+++++++++++++++++++++++++++++++++++ mpk part:", err)
 		mpk = mpk.Add(mpk, mpkPrime)
 		
 		}

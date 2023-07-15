@@ -26,7 +26,7 @@ func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundM
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	b, _ := msg.Marshal()
-
+	
 	count := k.IncreaseCounter(ctx, 1)
 	str_count := strconv.FormatUint(count, 10)
 
@@ -289,8 +289,15 @@ func (b *Bcast) UnmarshalBinary(data []byte) error {
 func (c *vssCommit) UnmarshalBinary(data []byte) error {
 	// Assuming that each commit is represented by a fixed number of bytes,
 	// say n bytes. If this is not the case, you'll need to adjust this code.
-	 commitSize := 48
-	data = data[11:]
+	commitSize := 48
+	index := 0 
+	for i := 0; i < len(data); i++ {
+		if data[i] == 48{
+			index = i+1
+			break
+		}
+	}
+	data = data[index:]
 	var commits [][]byte
 	reader := bytes.NewReader(data)
 	for {
