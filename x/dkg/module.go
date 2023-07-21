@@ -178,9 +178,10 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		round := timeoutData.Round
 		start := timeoutData.Start
 		id := timeoutData.Id
-		if ctx.BlockHeight() == int64(uint64(start)+desiredHeight*(round+1)) {
+		if round == 2 {
+			if ctx.BlockHeight() == int64(uint64(start)+desiredHeight+220) {
 			// Construct your event with attributes
-			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:", round, desiredHeight)
 			event := sdk.NewEvent(
 				"dkg-timeout",
 				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
@@ -192,12 +193,47 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 			ctx.EventManager().EmitEvent(event)
 			am.keeper.NextRound(ctx)
 		}
+		}
+		if round == 0{ 
+		if ctx.BlockHeight() == int64(uint64(start)+20) {
+			// Construct your event with attributes
+			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
+			event := sdk.NewEvent(
+				"dkg-timeout",
+				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+				sdk.NewAttribute("id", id),
+				// Add more attributes as needed
+			)
+
+			// Emit the event
+			ctx.EventManager().EmitEvent(event)
+			am.keeper.NextRound(ctx)
+		}}
+	if round == 1{
+		if ctx.BlockHeight() == int64(uint64(start)+200) {
+			// Construct your event with attributes
+			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
+			event := sdk.NewEvent(
+				"dkg-timeout",
+				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+				sdk.NewAttribute("id", id),
+				// Add more attributes as needed
+			)
+
+			// Emit the event
+			ctx.EventManager().EmitEvent(event)
+			am.keeper.NextRound(ctx)
+		}
+
+	}
+	
 		if round == 3 {
 
 			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx))
 			am.keeper.InitTimeout(ctx, 0, 0, 0, "")
 		}
 	}
+	
 	return []abci.ValidatorUpdate{}
 }
 
