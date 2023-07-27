@@ -2,11 +2,17 @@ package keeper
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/sirupsen/logrus"
+
+	//	"github.com/sirupsen/logrus"
+
+	//"github.com/sirupsen/logrus"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"dkg/x/dkg/types"
@@ -14,6 +20,7 @@ import (
 
 type (
 	Keeper struct {
+		mu sync.Mutex
 		cdc        codec.BinaryCodec
 		storeKey   storetypes.StoreKey
 		memKey     storetypes.StoreKey
@@ -22,6 +29,7 @@ type (
 )
 
 func NewKeeper(
+
 	cdc codec.BinaryCodec,
 	storeKey,
 	memKey storetypes.StoreKey,
@@ -34,6 +42,7 @@ func NewKeeper(
 	}
 
 	return &Keeper{
+		
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
@@ -52,6 +61,8 @@ func (k Keeper) InitCounter(ctx sdk.Context) {
 }
 
 func (k Keeper) IncreaseCounter(ctx sdk.Context, amount uint64) uint64 {
+	k.mu.Lock()
+    defer k.mu.Unlock()
 	store := ctx.KVStore(k.storeKey)
 	var counter types.Counter
 	bz := store.Get([]byte("counter"))
@@ -97,26 +108,68 @@ func (k Keeper) InitMPK(ctx sdk.Context, id string) {
 	pks := make(map[uint64][]byte)
 	mpkData := types.MPKData{Pks: pks,Id: id}
 	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+	store.Set([]byte("mpkData2"), mpkData.MustMarshalBinaryBare())
+	store.Set([]byte("mpkData3"), mpkData.MustMarshalBinaryBare())
 }
 
 func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
 	store := ctx.KVStore(k.storeKey)
 	var mpkData types.MPKData
-	bz := store.Get([]byte("mpkData"))
+	bz := store.Get([]byte("mpkData3"))
 	mpkData.MustUnmarshalBinaryBare(bz)
+
 	if (mpkData.Id == dkgId){
-	mpkData.Pks[faulterId] = []byte{0}}
-	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+		if mpkData.Pks[faulterId] == nil {
+			bz = store.Get([]byte("mpkData2"))
+			mpkData.MustUnmarshalBinaryBare(bz)
+			if mpkData.Pks[faulterId] == nil {
+				bz = store.Get([]byte("mpkData"))
+				mpkData.MustUnmarshalBinaryBare(bz)
+				mpkData.Pks[faulterId] = []byte{0}
+				store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+				return
+			}
+			mpkData.Pks[faulterId] = []byte{0}
+				store.Set([]byte("mpkData2"), mpkData.MustMarshalBinaryBare())
+				return
+		}
+	mpkData.Pks[faulterId] = []byte{0}
+	store.Set([]byte("mpkData3"), mpkData.MustMarshalBinaryBare())}
 
 }
 
 func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){
+	k.mu.Lock()
+    defer k.mu.Unlock()
 	store := ctx.KVStore(k.storeKey)
 	var mpkData types.MPKData
+	var mpkData2 types.MPKData
+	var mpkData3 types.MPKData
 	bz := store.Get([]byte("mpkData"))
 	mpkData.MustUnmarshalBinaryBare(bz)
+	if len(mpkData.Pks) == 87 {
+		logrus.Info("len reached---------------------------", id)
+		bz = store.Get([]byte("mpkData2"))
+		mpkData2.MustUnmarshalBinaryBare(bz)
+		if len(mpkData2.Pks) == 87 {
+			bz = store.Get([]byte("mpkData3"))
+			mpkData3.MustUnmarshalBinaryBare(bz)
+			mpkData3.Pks[id] = pk
+			store.Set([]byte("mpkData3"), mpkData3.MustMarshalBinaryBare())
+			return
+		}
+		mpkData2.Pks[id] = pk
+		logrus.Info("before set ((((((((((()))))))))))")
+			store.Set([]byte("mpkData2"), mpkData2.MustMarshalBinaryBare())
+			logrus.Info("after set ((((((((((()))))))))))")
+			return
+	}
+	//logrus.Info("here(((((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))", id, mpkData.Pks)
 	mpkData.Pks[id] = pk
+	//logrus.Info("here after(((((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))", id, mpkData.Pks)
+	//logrus.Info("before set ((((((((((()))))))))))")
 	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+	//logrus.Info("before set ((((((((((()))))))))))")
 
 }
 
@@ -124,8 +177,20 @@ func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){
 func (k Keeper) GetMPKData(ctx sdk.Context) types.MPKData{
 	store := ctx.KVStore(k.storeKey)
 	var mpkData types.MPKData
+	var mpkData2 types.MPKData
+	var mpkData3 types.MPKData
 	bz := store.Get([]byte("mpkData"))
+	bz2 := store.Get([]byte("mpkData2"))
+	bz3 := store.Get([]byte("mpkData3"))
 	mpkData.MustUnmarshalBinaryBare(bz)
+	mpkData2.MustUnmarshalBinaryBare(bz2)
+	mpkData3.MustUnmarshalBinaryBare(bz3)
+	for k, v := range mpkData2.Pks {
+        mpkData.Pks[k] = v
+    }
+	for k, v := range mpkData3.Pks {
+        mpkData.Pks[k] = v
+    }
 	return mpkData
 
 }

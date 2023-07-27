@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sirupsen/logrus"
 	//"github.com/drand/kyber"
 )
 
@@ -59,7 +60,7 @@ func (t *TimeoutData) MustUnmarshalBinaryBare(bz []byte) {
 func (m MPKData) MustMarshalBinaryBare() []byte {
 	bz, err := json.Marshal(m)
 	if err != nil {
-		panic(err) // handle the error according to your use case
+		logrus.Info(err) // handle the error according to your use case
 	}
 	return sdk.MustSortJSON(bz)
 }

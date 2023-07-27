@@ -14,6 +14,7 @@ import (
 
 	types1 "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/sirupsen/logrus"
+	//"github.com/sirupsen/logrus"
 
 	//"encoding/json"
 	"strconv"
@@ -31,7 +32,7 @@ func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundM
 	
 	count := k.IncreaseCounter(ctx, 1)
 	str_count := strconv.FormatUint(count, 10)
-
+	
 	_ = ctx
 	event := sdk.NewEvent(
 		types.EventTypeKeygen,
@@ -41,7 +42,7 @@ func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundM
 	)
 	ctx.EventManager().EmitEvent(event)
 	//  msgBack := new(types.MsgRefundMsgRequest)
-	
+	logrus.Warning("*********************************************************************************** index: ", str_count)
 	msgBack :=  Unmarshal(b)
 	//logrus.Warning("*********************************************************************************** message1: ", msgBack.InnerMessage.Value)
 	message := new(types.ProcessKeygenTrafficRequest)
@@ -50,15 +51,16 @@ func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundM
 	//logrus.Warning("*********************************************************************************** message val: ", message)
 	if message.Payload.RoundNum == "1" {
 		if message.Payload.IsBroadcast {
-			logrus.Warning("*********************************************************************************** inside: ", message.Payload.Payload)
 			
+		//	logrus.Info("-------------------------------------------------------------> ",message)
 			bcast := new(Bcast)
 			bcast.UnmarshalBinary(message.Payload.Payload)
 
 		//	bcast.Unmarshal(message.Payload.Payload)
 			
-		//	logrus.Warning("*********************************************************************************** value: ", bcast)
+			
 			k.AddPk(ctx, bcast.UIVssCommit.CoeffCommits[0], uint64(bcast.ID))
+			logrus.Warning("*********************************************************************************** value: ", bcast.UIVssCommit.CoeffCommits[0])
 		}
 	}
 	
