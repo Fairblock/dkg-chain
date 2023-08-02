@@ -147,11 +147,12 @@ func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){
 	var mpkData3 types.MPKData
 	bz := store.Get([]byte("mpkData"))
 	mpkData.MustUnmarshalBinaryBare(bz)
-	if len(mpkData.Pks) == 87 {
-		logrus.Info("len reached---------------------------", id)
+	logrus.Info("len---------------------------", len(mpkData.Pks) ,id)
+	if len(mpkData.Pks) == 60 {
+		
 		bz = store.Get([]byte("mpkData2"))
 		mpkData2.MustUnmarshalBinaryBare(bz)
-		if len(mpkData2.Pks) == 87 {
+		if len(mpkData2.Pks) == 60 {
 			bz = store.Get([]byte("mpkData3"))
 			mpkData3.MustUnmarshalBinaryBare(bz)
 			mpkData3.Pks[id] = pk

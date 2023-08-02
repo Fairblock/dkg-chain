@@ -58,9 +58,9 @@ func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundM
 
 		//	bcast.Unmarshal(message.Payload.Payload)
 			
-			
+		logrus.Warning("*********************************************************************************** value1: ", bcast.UIVssCommit.CoeffCommits[0])
 			k.AddPk(ctx, bcast.UIVssCommit.CoeffCommits[0], uint64(bcast.ID))
-			logrus.Warning("*********************************************************************************** value: ", bcast.UIVssCommit.CoeffCommits[0])
+			logrus.Warning("*********************************************************************************** value2: ", bcast.UIVssCommit.CoeffCommits[0])
 		}
 	}
 	
