@@ -28,6 +28,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sirupsen/logrus"
 
 	//bls12381 "github.com/kilic/bls12-381"
 
@@ -300,7 +301,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		sdk.NewAttribute("index", str_count),
 		sdk.NewAttribute("module", "dkg"),
 	)
-
+	logrus.Info("------------ indexDispute: ", str_count)
 	
 	faulter, _ := strconv.Atoi(slashed)
 	k.AddFaulter(ctx,uint64(faulter),msg.KeyId)
