@@ -56,74 +56,74 @@ accounts:
   coins:
   - 10000token
   - 100000000stake
-# - name: david
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: dina
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: nina
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: oliver
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: paul
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: quincy
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: rachel
-#   coins:
-#   - 10000token
-#   - 100000000stake
-# - name: julia
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: jacqueline
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: june
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: joy
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: jade
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: jesse
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: jeremy
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: jordan
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: joan
-#   coins:
-#     - 10000token
-#     - 100000000stake
-# - name: jared
-#   coins:
-#     - 10000token
-#     - 100000000stake
+- name: david
+  coins:
+  - 10000token
+  - 100000000stake
+- name: dina
+  coins:
+  - 10000token
+  - 100000000stake
+- name: nina
+  coins:
+  - 10000token
+  - 100000000stake
+- name: oliver
+  coins:
+  - 10000token
+  - 100000000stake
+- name: paul
+  coins:
+  - 10000token
+  - 100000000stake
+- name: quincy
+  coins:
+  - 10000token
+  - 100000000stake
+- name: rachel
+  coins:
+  - 10000token
+  - 100000000stake
+- name: julia
+  coins:
+    - 10000token
+    - 100000000stake
+- name: jacqueline
+  coins:
+    - 10000token
+    - 100000000stake
+- name: june
+  coins:
+    - 10000token
+    - 100000000stake
+- name: joy
+  coins:
+    - 10000token
+    - 100000000stake
+- name: jade
+  coins:
+    - 10000token
+    - 100000000stake
+- name: jesse
+  coins:
+    - 10000token
+    - 100000000stake
+- name: jeremy
+  coins:
+    - 10000token
+    - 100000000stake
+- name: jordan
+  coins:
+    - 10000token
+    - 100000000stake
+- name: joan
+  coins:
+    - 10000token
+    - 100000000stake
+- name: jared
+  coins:
+    - 10000token
+    - 100000000stake
 - name: Jessica1
   coins:
   - 10000token
@@ -613,5 +613,7 @@ faucet:
   - 5token
   - 100000stake
 validators:
-- name: alice
+- name: validator1
+  bonded: 100000000stake
+- name: validator2
   bonded: 100000000stake

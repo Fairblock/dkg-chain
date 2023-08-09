@@ -290,11 +290,14 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		//slash the accuser
 		slashed = string(rune(dispute.AccuserId))
 	}
+	counting := k.IncreaseCounter(ctx, 1)
+	str_count := strconv.FormatUint(counting, 10)
 	event := sdk.NewEvent(
 		types.EventTypeKeygen,
 		sdk.NewAttribute(types.AttributeValueDispute, slashed),
 		sdk.NewAttribute("keyID", msg.KeyId),
 		sdk.NewAttribute("from", msg.Creator),
+		sdk.NewAttribute("index", str_count),
 		sdk.NewAttribute("module", "dkg"),
 	)
 
