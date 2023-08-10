@@ -233,7 +233,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		FaulterId:        msg.Dispute.FaulterId,
 		CReal:            msg.Dispute.CReal,
 	}
-
+	logrus.Info("------------ Dispute0: ", dispute)
 	count := k.GetDisputeCount(ctx)
 	dispute.Id = count
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DisputeKey))
@@ -302,11 +302,11 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		sdk.NewAttribute("module", "dkg"),
 	)
 	ctx.EventManager().EmitEvent(event)
-	logrus.Info("------------ indexDispute1: ", str_count)
-	
+	logrus.Info("------------ faulterDispute1: ", slashed)
+	logrus.Info("------------ indexDispute2: ", str_count)
 	faulter, _ := strconv.Atoi(slashed)
 	k.AddFaulter(ctx,uint64(faulter),msg.KeyId)
-	logrus.Info("------------ indexDispute2: ", str_count)
+	
 	
 	return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: []byte(slashed)}, nil
 	//return nil, nil
