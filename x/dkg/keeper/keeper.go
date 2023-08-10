@@ -131,19 +131,19 @@ func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
 				bz = store.Get([]byte("mpkData"))
 				mpkData.MustUnmarshalBinaryBare(bz)
 				logrus.Info("three---------------------------", mpkData)
-				mpkData.Pks[faulterId] = []byte{0}
+				mpkData.Pks[faulterId] = make([]byte, 48)
 				logrus.Info("four---------------------------", mpkData)
 				store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
 				logrus.Info("five---------------------------")
 				return
 			}
 
-			mpkData2.Pks[faulterId] = []byte{0}
+			mpkData2.Pks[faulterId] = make([]byte, 48)
 			
 				store.Set([]byte("mpkData2"), mpkData2.MustMarshalBinaryBare())
 				return
 		}
-	mpkData3.Pks[faulterId] = []byte{0}
+	mpkData3.Pks[faulterId] = make([]byte, 48)
 	logrus.Info("six---------------------------", mpkData3)
 	store.Set([]byte("mpkData3"), mpkData3.MustMarshalBinaryBare())}
 

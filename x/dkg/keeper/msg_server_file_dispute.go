@@ -233,7 +233,8 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		FaulterId:        msg.Dispute.FaulterId,
 		CReal:            msg.Dispute.CReal,
 	}
-	logrus.Info("------------ Dispute0: ", dispute)
+	faulter := -1
+	logrus.Info("------------ Dispute0: ", dispute.FaulterId,dispute.AccuserId)
 	count := k.GetDisputeCount(ctx)
 	dispute.Id = count
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DisputeKey))
@@ -278,11 +279,13 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		if !verify {
 			//panic("accusee")
 			slashed = string(rune(dispute.FaulterId))
+			faulter = int(dispute.FaulterId)
 		}
 		if verify {
 			//panic("accuser 1")
 			//slash the accuser
 			slashed = string(rune(dispute.AccuserId))
+			faulter = int(dispute.AccuserId)
 		}
 	}
 
@@ -290,6 +293,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		//panic("accuser 2")
 		//slash the accuser
 		slashed = string(rune(dispute.AccuserId))
+		faulter = int(dispute.AccuserId)
 	}
 	counting := k.IncreaseCounter(ctx, 1)
 	str_count := strconv.FormatUint(counting, 10)
@@ -304,7 +308,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	ctx.EventManager().EmitEvent(event)
 	logrus.Info("------------ faulterDispute1: ", slashed)
 	logrus.Info("------------ indexDispute2: ", str_count)
-	faulter, _ := strconv.Atoi(slashed)
+	
 	k.AddFaulter(ctx,uint64(faulter),msg.KeyId)
 	
 	
