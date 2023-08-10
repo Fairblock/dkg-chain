@@ -195,7 +195,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		}
 		}
 		if round == 0{ 
-		if ctx.BlockHeight() == int64(uint64(start)+15) {
+		if ctx.BlockHeight() == int64(uint64(start)+40) {
 			// Construct your event with attributes
 			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
 			event := sdk.NewEvent(
@@ -210,7 +210,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 			am.keeper.NextRound(ctx)
 		}}
 	if round == 1{
-		if ctx.BlockHeight() == int64(uint64(start)+70) {
+		if ctx.BlockHeight() == int64(uint64(start)+75) {
 			// Construct your event with attributes
 			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
 			event := sdk.NewEvent(

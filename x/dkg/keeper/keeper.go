@@ -113,6 +113,8 @@ func (k Keeper) InitMPK(ctx sdk.Context, id string) {
 }
 
 func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
+	k.mu.Lock()
+    defer k.mu.Unlock()
 	store := ctx.KVStore(k.storeKey)
 	var mpkData types.MPKData
 	var mpkData2 types.MPKData
@@ -133,7 +135,12 @@ func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
 				logrus.Info("three---------------------------", mpkData)
 				mpkData.Pks[faulterId] = make([]byte, 48)
 				logrus.Info("four---------------------------", mpkData)
-				store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
+				b:= mpkData.MustMarshalBinaryBare()
+				storetypes.AssertValidKey([]byte("mpkData"))
+				storetypes.AssertValidValue(b)
+				logrus.Info("byte---------------------------", b)
+				
+				store.Set([]byte("mpkData"), b)
 				logrus.Info("five---------------------------")
 				return
 			}
