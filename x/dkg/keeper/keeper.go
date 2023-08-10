@@ -115,26 +115,28 @@ func (k Keeper) InitMPK(ctx sdk.Context, id string) {
 func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
 	store := ctx.KVStore(k.storeKey)
 	var mpkData types.MPKData
+	var mpkData2 types.MPKData
+	var mpkData3 types.MPKData
 	bz := store.Get([]byte("mpkData3"))
-	mpkData.MustUnmarshalBinaryBare(bz)
+	mpkData3.MustUnmarshalBinaryBare(bz)
 
-	if (mpkData.Id == dkgId){
-		if mpkData.Pks[faulterId] == nil {
+	if (mpkData3.Id == dkgId){
+		if mpkData3.Pks[faulterId] == nil {
 			bz = store.Get([]byte("mpkData2"))
-			mpkData.MustUnmarshalBinaryBare(bz)
-			if mpkData.Pks[faulterId] == nil {
+			mpkData2.MustUnmarshalBinaryBare(bz)
+			if mpkData2.Pks[faulterId] == nil {
 				bz = store.Get([]byte("mpkData"))
 				mpkData.MustUnmarshalBinaryBare(bz)
 				mpkData.Pks[faulterId] = []byte{0}
 				store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
 				return
 			}
-			mpkData.Pks[faulterId] = []byte{0}
-				store.Set([]byte("mpkData2"), mpkData.MustMarshalBinaryBare())
+			mpkData2.Pks[faulterId] = []byte{0}
+				store.Set([]byte("mpkData2"), mpkData2.MustMarshalBinaryBare())
 				return
 		}
-	mpkData.Pks[faulterId] = []byte{0}
-	store.Set([]byte("mpkData3"), mpkData.MustMarshalBinaryBare())}
+	mpkData3.Pks[faulterId] = []byte{0}
+	store.Set([]byte("mpkData3"), mpkData3.MustMarshalBinaryBare())}
 
 }
 
