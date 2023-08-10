@@ -301,12 +301,13 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		sdk.NewAttribute("index", str_count),
 		sdk.NewAttribute("module", "dkg"),
 	)
-	logrus.Info("------------ indexDispute: ", str_count)
+	ctx.EventManager().EmitEvent(event)
+	logrus.Info("------------ indexDispute1: ", str_count)
 	
 	faulter, _ := strconv.Atoi(slashed)
 	k.AddFaulter(ctx,uint64(faulter),msg.KeyId)
-
-	ctx.EventManager().EmitEvent(event)
+	logrus.Info("------------ indexDispute2: ", str_count)
+	
 	return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: []byte(slashed)}, nil
 	//return nil, nil
 }
