@@ -34,6 +34,9 @@ type TimeoutData struct {
 	
 }
 
+type Faulters struct {
+	FaultyList []uint64 `json:"numbers"`
+}
 
     // Initialize the map
    
@@ -66,6 +69,21 @@ func (m MPKData) MustMarshalBinaryBare() []byte {
 }
 
 func (m *MPKData) MustUnmarshalBinaryBare(bz []byte) {
+	if err := json.Unmarshal(bz, m); err != nil {
+		panic(err) // handle the error according to your use case
+	}
+}
+
+
+func (m Faulters) MustMarshalBinaryBare() []byte {
+	bz, err := json.Marshal(m)
+	if err != nil {
+		logrus.Info(err) // handle the error according to your use case
+	}
+	return sdk.MustSortJSON(bz)
+}
+
+func (m *Faulters) MustUnmarshalBinaryBare(bz []byte) {
 	if err := json.Unmarshal(bz, m); err != nil {
 		panic(err) // handle the error according to your use case
 	}

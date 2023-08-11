@@ -172,7 +172,7 @@ type vssCommit struct {
 func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 
 	timeoutData := am.keeper.GetTimeout(ctx)
-
+	faultyList, _ := am.keeper.GetList(ctx)
 	if timeoutData.Id != "" {
 		desiredHeight := timeoutData.Timeout
 		round := timeoutData.Round
@@ -229,7 +229,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 	
 		if round == 3 {
 
-			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx))
+			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx), faultyList.FaultyList)
 			am.keeper.InitTimeout(ctx, 0, 0, 0, "")
 		}
 	}
@@ -237,17 +237,25 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 	return []abci.ValidatorUpdate{}
 }
 
-func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData) {
+func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData, faulters []uint64) {
 	logrus.Info("+++++++++++++++++++++++++++++++++++ mpk:", mpkData.Pks)
 	suite := bls.NewBLS12381Suite()
 
 	mpk := suite.G1().Point()
-
+	
 
 	if id != mpkData.Id {
 		logrus.Panic("wrong mpk data")
 	}
 	for i := 0; i < len(mpkData.Pks); i++ {
+		skip := false
+		for j := 0; j < len(faulters); j++ {
+			if faulters[j] == uint64(i) {
+				skip = true
+				break
+			}
+		}
+		if !skip {
 		logrus.Info("+++++++++++++++++++++++++++++++++++  mpk1 :", i)
 		if i == 0 {
 			//logrus.Info("+++++++++++++++++++++++++++++++++++ first mpk part:", mpkData.Pks[uint64(i)])
@@ -267,7 +275,7 @@ func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData) {
 		
 		}
 	
-	}
+	}}
 	pkb,_ :=mpk.MarshalBinary()
 		//logrus.Info("+++++++++++++++++++++++++++++++++++  mpk2 :", pkb)
 	event := sdk.NewEvent(

@@ -110,50 +110,86 @@ func (k Keeper) InitMPK(ctx sdk.Context, id string) {
 	store.Set([]byte("mpkData"), mpkData.MustMarshalBinaryBare())
 	store.Set([]byte("mpkData2"), mpkData.MustMarshalBinaryBare())
 	store.Set([]byte("mpkData3"), mpkData.MustMarshalBinaryBare())
+	k.InitializeList(ctx)
 }
 
-func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
-	k.mu.Lock()
-    defer k.mu.Unlock()
-	store := ctx.KVStore(k.storeKey)
-	var mpkData types.MPKData
-	var mpkData2 types.MPKData
-	var mpkData3 types.MPKData
-	bz := store.Get([]byte("mpkData3"))
-	mpkData3.MustUnmarshalBinaryBare(bz)
-	logrus.Info("one---------------------------", faulterId)
-	if (mpkData3.Id == dkgId){
+// func (k Keeper) AddFaulter(ctx sdk.Context, faulterId uint64, dkgId string){
+
+	// k.mu.Lock()
+    // defer k.mu.Unlock()
+	// store := ctx.KVStore(k.storeKey)
+	// var mpkData types.MPKData
+	// var mpkData2 types.MPKData
+	// var mpkData3 types.MPKData
+	// bz := store.Get([]byte("mpkData3"))
+	// mpkData3.MustUnmarshalBinaryBare(bz)
+	// logrus.Info("one---------------------------", faulterId)
+	// if (mpkData3.Id == dkgId){
 		
-		if mpkData3.Pks[faulterId] == nil {
+	// 	if mpkData3.Pks[faulterId] == nil {
 			
-			bz = store.Get([]byte("mpkData2"))
-			mpkData2.MustUnmarshalBinaryBare(bz)
+	// 		bz = store.Get([]byte("mpkData2"))
+	// 		mpkData2.MustUnmarshalBinaryBare(bz)
 			
-			if mpkData2.Pks[faulterId] == nil {
-				bz = store.Get([]byte("mpkData"))
-				mpkData.MustUnmarshalBinaryBare(bz)
-				logrus.Info("three---------------------------", mpkData)
-				mpkData.Pks[faulterId] = make([]byte, 48)
-				logrus.Info("four---------------------------", mpkData)
-				b:= mpkData.MustMarshalBinaryBare()
-				storetypes.AssertValidKey([]byte("mpkData"))
-				storetypes.AssertValidValue(b)
-				logrus.Info("byte---------------------------", b)
+	// 		if mpkData2.Pks[faulterId] == nil {
+	// 			bz = store.Get([]byte("mpkData"))
+	// 			mpkData.MustUnmarshalBinaryBare(bz)
+	// 			logrus.Info("three---------------------------", mpkData)
+	// 			mpkData.Pks[faulterId] = make([]byte, 48)
+	// 			logrus.Info("four---------------------------", mpkData)
+	// 			b:= mpkData.MustMarshalBinaryBare()
 				
-				store.Set([]byte("mpkData"), b)
-				logrus.Info("five---------------------------")
-				return
-			}
+				
+	// 			logrus.Info("byte---------------------------", b)
+				
+	// 			store.Set([]byte("mpkData"), b) 
+	// 			logrus.Info("five---------------------------")
+	// 			return
+	// 		}
 
-			mpkData2.Pks[faulterId] = make([]byte, 48)
+	// 		mpkData2.Pks[faulterId] = make([]byte, 48)
 			
-				store.Set([]byte("mpkData2"), mpkData2.MustMarshalBinaryBare())
-				return
-		}
-	mpkData3.Pks[faulterId] = make([]byte, 48)
-	logrus.Info("six---------------------------", mpkData3)
-	store.Set([]byte("mpkData3"), mpkData3.MustMarshalBinaryBare())}
+	// 			store.Set([]byte("mpkData2"), mpkData2.MustMarshalBinaryBare())
+	// 			return
+	// 	}
+	// mpkData3.Pks[faulterId] = make([]byte, 48)
+	// logrus.Info("six---------------------------", mpkData3)
+	// store.Set([]byte("mpkData3"), mpkData3.MustMarshalBinaryBare())}
 
+// }
+
+func (k Keeper) InitializeList(ctx sdk.Context) {
+	list := types.Faulters{
+		FaultyList: []uint64{},
+	}
+	store := ctx.KVStore(k.storeKey)
+	bz := list.MustMarshalBinaryBare()
+	store.Set([]byte("faulters"), bz)
+}
+
+func (k Keeper) SetList(ctx sdk.Context, list types.Faulters) {
+	store := ctx.KVStore(k.storeKey)
+	bz := list.MustMarshalBinaryBare()
+	store.Set([]byte("faulters"), bz)
+}
+
+func (k Keeper) GetList(ctx sdk.Context) (list types.Faulters, found bool) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get([]byte("faulters"))
+	if bz == nil {
+		return list, false
+	}
+	list.MustUnmarshalBinaryBare(bz)
+	return list, true
+}
+
+func (k Keeper) AddFaulter(ctx sdk.Context, number uint64) {
+	list, found := k.GetList(ctx)
+	if !found {
+		list = types.Faulters{}
+	}
+	list.FaultyList = append(list.FaultyList, number)
+	k.SetList(ctx, list)
 }
 
 func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){
