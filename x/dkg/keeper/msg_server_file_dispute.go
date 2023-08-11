@@ -278,13 +278,15 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		verify := distIBE.VerifyVSSShare(distIBE.Share{Index: sharei, Value: sharev}, commits)
 		if !verify {
 			//panic("accusee")
-			slashed = string(rune(dispute.FaulterId))
+			slashed = strconv.FormatUint(dispute.FaulterId, 10)
+			//slashed = string(rune(dispute.FaulterId))
 			faulter = int(dispute.FaulterId)
 		}
 		if verify {
 			//panic("accuser 1")
 			//slash the accuser
-			slashed = string(rune(dispute.AccuserId))
+			slashed = strconv.FormatUint(dispute.AccuserId, 10)
+			//slashed = string(rune(dispute.AccuserId))
 			faulter = int(dispute.AccuserId)
 		}
 	}
@@ -292,7 +294,8 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	if !res {
 		//panic("accuser 2")
 		//slash the accuser
-		slashed = string(rune(dispute.AccuserId))
+		slashed = strconv.FormatUint(dispute.AccuserId, 10)
+		//slashed = string(rune(dispute.AccuserId))
 		faulter = int(dispute.AccuserId)
 	}
 	counting := k.IncreaseCounter(ctx, 1)
@@ -306,7 +309,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		sdk.NewAttribute("module", "dkg"),
 	)
 	ctx.EventManager().EmitEvent(event)
-	logrus.Info("------------ faulterDispute1: ", slashed)
+	logrus.Info("------------ faulterDispute1: ", event.Attributes[0].Value)
 	logrus.Info("------------ indexDispute2: ", str_count)
 	
 	k.AddFaulter(ctx,uint64(faulter))

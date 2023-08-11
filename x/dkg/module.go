@@ -179,7 +179,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		start := timeoutData.Start
 		id := timeoutData.Id
 		if round == 2 {
-			if ctx.BlockHeight() == int64(uint64(start)+desiredHeight+270) {
+			if ctx.BlockHeight() == int64(uint64(start)+desiredHeight+220) {
 			// Construct your event with attributes
 			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:", round, desiredHeight)
 			event := sdk.NewEvent(
@@ -195,7 +195,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		}
 		}
 		if round == 0{ 
-		if ctx.BlockHeight() == int64(uint64(start)+40) {
+		if ctx.BlockHeight() == int64(uint64(start)+50) {
 			// Construct your event with attributes
 			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
 			event := sdk.NewEvent(
@@ -210,7 +210,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 			am.keeper.NextRound(ctx)
 		}}
 	if round == 1{
-		if ctx.BlockHeight() == int64(uint64(start)+75) {
+		if ctx.BlockHeight() == int64(uint64(start)+170) {
 			// Construct your event with attributes
 			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
 			event := sdk.NewEvent(
@@ -239,6 +239,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 
 func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData, faulters []uint64) {
 	logrus.Info("+++++++++++++++++++++++++++++++++++ mpk:", mpkData.Pks)
+	logrus.Info("+++++++++++++++++++++++++++++++++++ faulters:", faulters)
 	suite := bls.NewBLS12381Suite()
 
 	mpk := suite.G1().Point()
