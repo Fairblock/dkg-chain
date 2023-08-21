@@ -300,20 +300,24 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	}
 	counting := k.IncreaseCounter(ctx, 1)
 	str_count := strconv.FormatUint(counting, 10)
-	event := sdk.NewEvent(
-		types.EventTypeKeygen,
-		sdk.NewAttribute(types.AttributeValueDispute, slashed),
-		sdk.NewAttribute("keyID", msg.KeyId),
-		sdk.NewAttribute("from", msg.Creator),
-		sdk.NewAttribute("index", str_count),
-		sdk.NewAttribute("module", "dkg"),
-	)
-	ctx.EventManager().EmitEvent(event)
-	logrus.Info("------------ faulterDispute1: ", event.Attributes[0].Value)
-	logrus.Info("------------ indexDispute2: ", str_count)
 	
-	k.AddFaulter(ctx,uint64(faulter))
-	logrus.Info("------------ indexDispute3: ", str_count)
+	logrus.Info("------------ faulterDispute1: ", slashed)
+	added := k.AddFaulter(ctx,uint64(faulter))
+	logrus.Info("------------ indexDispute2: ", str_count, added)
+	if added {
+		event := sdk.NewEvent(
+			types.EventTypeKeygen,
+			sdk.NewAttribute(types.AttributeValueDispute, slashed),
+			sdk.NewAttribute("keyID", msg.KeyId),
+			sdk.NewAttribute("from", msg.Creator),
+			sdk.NewAttribute("index", str_count),
+			sdk.NewAttribute("module", "dkg"),
+		)
+		ctx.EventManager().EmitEvent(event)
+		
+		logrus.Info("------------ indexDispute3: ", str_count)
+	}
+	
 	
 	return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: []byte(slashed)}, nil
 	//return nil, nil

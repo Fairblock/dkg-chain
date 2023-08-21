@@ -184,7 +184,7 @@ func (k Keeper) GetList(ctx sdk.Context) (list types.Faulters, found bool) {
 	return list, true
 }
 
-func (k Keeper) AddFaulter(ctx sdk.Context, number uint64) {
+func (k Keeper) AddFaulter(ctx sdk.Context, number uint64) bool {
 	list, found := k.GetList(ctx)
 	if !found {
 		list = types.Faulters{}
@@ -192,7 +192,9 @@ func (k Keeper) AddFaulter(ctx sdk.Context, number uint64) {
 	if !list.Lookup[number] { 
 	list.FaultyList = append(list.FaultyList, number)
 	list.Lookup[number] = true
-	k.SetList(ctx, list)}
+	k.SetList(ctx, list)
+return true}
+return false
 }
 
 func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){
