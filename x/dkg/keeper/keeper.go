@@ -161,6 +161,7 @@ func (k Keeper) InitMPK(ctx sdk.Context, id string) {
 func (k Keeper) InitializeList(ctx sdk.Context) {
 	list := types.Faulters{
 		FaultyList: []uint64{},
+		Lookup: map[uint64]bool{},
 	}
 	store := ctx.KVStore(k.storeKey)
 	bz := list.MustMarshalBinaryBare()
@@ -188,8 +189,10 @@ func (k Keeper) AddFaulter(ctx sdk.Context, number uint64) {
 	if !found {
 		list = types.Faulters{}
 	}
+	if !list.Lookup[number] { 
 	list.FaultyList = append(list.FaultyList, number)
-	k.SetList(ctx, list)
+	list.Lookup[number] = true
+	k.SetList(ctx, list)}
 }
 
 func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64){

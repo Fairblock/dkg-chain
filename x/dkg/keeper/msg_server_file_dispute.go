@@ -313,7 +313,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	logrus.Info("------------ indexDispute2: ", str_count)
 	
 	k.AddFaulter(ctx,uint64(faulter))
-	
+	logrus.Info("------------ indexDispute3: ", str_count)
 	
 	return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: []byte(slashed)}, nil
 	//return nil, nil

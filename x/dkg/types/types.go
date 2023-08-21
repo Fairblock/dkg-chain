@@ -35,7 +35,8 @@ type TimeoutData struct {
 }
 
 type Faulters struct {
-	FaultyList []uint64 `json:"numbers"`
+	FaultyList []uint64 `json:"faultyList"`
+	Lookup map[uint64]bool `json:"lookup"`
 }
 
     // Initialize the map
