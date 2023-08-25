@@ -5,34 +5,26 @@ import (
 	"context"
 	"encoding/binary"
 
-	//"errors"
-
-	//	"encoding/binary"
-	//"encoding/json"
 	"fmt"
 	"io"
 
 	types1 "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/sirupsen/logrus"
-	//"github.com/sirupsen/logrus"
 
-	//"encoding/json"
 	"strconv"
 
 	"dkg/x/dkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	//"github.com/sirupsen/logrus"
 )
 
 func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundMsgRequest) (*types.MsgRefundMsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	b, _ := msg.Marshal()
-	
+
 	count := k.IncreaseCounter(ctx, 1)
 	str_count := strconv.FormatUint(count, 10)
-	
+
 	_ = ctx
 	event := sdk.NewEvent(
 		types.EventTypeKeygen,
@@ -41,33 +33,28 @@ func (k msgServer) RefundMsgRequest(goCtx context.Context, msg *types.MsgRefundM
 		sdk.NewAttribute("index", str_count),
 	)
 	ctx.EventManager().EmitEvent(event)
-	//  msgBack := new(types.MsgRefundMsgRequest)
-	logrus.Warning("*********************************************************************************** index: ", str_count)
-	msgBack :=  Unmarshal(b)
-	//logrus.Warning("*********************************************************************************** message1: ", msgBack.InnerMessage.Value)
+
+	msgBack := Unmarshal(b)
+
 	message := new(types.ProcessKeygenTrafficRequest)
-	//logrus.SetLevel(logrus.WarnLevel)
-	 message.Unmarshal(msgBack.InnerMessage.Value)
-	//logrus.Warning("*********************************************************************************** message val: ", message)
+
+	message.Unmarshal(msgBack.InnerMessage.Value)
+
 	if message.Payload.RoundNum == "1" {
 		if message.Payload.IsBroadcast {
-			
-		//	logrus.Info("-------------------------------------------------------------> ",message)
+
 			bcast := new(Bcast)
 			bcast.UnmarshalBinary(message.Payload.Payload)
 
-		//	bcast.Unmarshal(message.Payload.Payload)
-			
-		logrus.Warning("*********************************************************************************** value1: ", bcast.UIVssCommit.CoeffCommits[0])
 			k.AddPk(ctx, bcast.UIVssCommit.CoeffCommits[0], uint64(bcast.ID))
-			logrus.Warning("*********************************************************************************** value2: ", bcast.UIVssCommit.CoeffCommits[0])
+
 		}
 	}
-	
+
 	return &types.MsgRefundMsgRequestResponse{}, nil
 }
 
-func Unmarshal( dAtA []byte) (m types.MsgRefundMsgRequest) {
+func Unmarshal(dAtA []byte) (m types.MsgRefundMsgRequest) {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -187,6 +174,7 @@ func Unmarshal( dAtA []byte) (m types.MsgRefundMsgRequest) {
 	}
 	return m
 }
+
 var (
 	ErrInvalidLengthTx        = fmt.Errorf("proto: negative length found during unmarshaling")
 	ErrIntOverflowTx          = fmt.Errorf("proto: integer overflow")
@@ -294,12 +282,13 @@ func (c *vssCommit) UnmarshalBinary(data []byte) error {
 	// Assuming that each commit is represented by a fixed number of bytes,
 	// say n bytes. If this is not the case, you'll need to adjust this code.
 	commitSize := 48
-	index := 0 
+	index := 0
 	for i := 0; i < len(data); i++ {
-		if data[i] == 48{
+		if data[i] == 48 {
 			if data[i-1] != 0 {
-			index = i+1
-			break}
+				index = i + 1
+				break
+			}
 		}
 	}
 	data = data[index:]

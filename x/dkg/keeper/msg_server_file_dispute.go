@@ -19,16 +19,15 @@ import (
 	//"github.com/cosmos/cosmos-sdk/store/prefix"
 
 	"bytes"
-	"crypto/rand"
+	
 	"crypto/sha256"
-	"fmt"
-	"math/big"
+
 
 	//"strings"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sirupsen/logrus"
+	//"github.com/sirupsen/logrus"
 
 	//bls12381 "github.com/kilic/bls12-381"
 
@@ -38,102 +37,29 @@ import (
 	bls "github.com/drand/kyber-bls12381"
 )
 
-type pubAndPrivKey struct {
-	publicKey  kyber.Point
-	privateKey kyber.Scalar
-}
 
-type zkProof struct {
-	hash   []byte
-	scalar kyber.Scalar
-}
-
-type listOfComplaints struct {
-	pubKeyOfAccuser kyber.Point
-	pubKeyOfAccusee kyber.Point
-	share           distIBE.Share
-	commit          distIBE.Commitments
-	kij             kyber.Point
-	proof           zkProof
-}
 
 var PointG = bls.NewBLS12381Suite().G1().Point().Base()
 
-const groupOrderInHex = "73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001"
 
-var groupOrder, _ = new(big.Int).SetString(groupOrderInHex, 16)
-
-func initInput(numOfUsers int, threshInPercent float64) (threshold int, PublicAndPrivateKeyArray []pubAndPrivKey, err error) {
-
-	PublicAndPrivateKeyArray = make([]pubAndPrivKey, numOfUsers)
-
-	for i := 0; i < numOfUsers; i++ {
-		one := big.NewInt(int64(1))
-		max := big.NewInt(int64(0))
-		max.Sub(groupOrder, one)
-
-		w, err := rand.Int(rand.Reader, max)
-		if err != nil {
-			return threshold, PublicAndPrivateKeyArray, fmt.Errorf("unable to generate secret key for users")
-		}
-		w.Add(w, one)
-
-		privateKey := bls.NewKyberScalar()
-		privateKey = kyber.Scalar.SetInt64(privateKey, w.Int64())
-
-		publicKey := PointG.Mul(privateKey, PointG)
-
-		PublicAndPrivateKeyArray[i].publicKey = publicKey
-		PublicAndPrivateKeyArray[i].privateKey = privateKey
-
-	}
-
-	threshold = int(float64(numOfUsers) * threshInPercent)
-
-	return threshold, PublicAndPrivateKeyArray, nil
-}
-
-type P struct {
-	Concat  string
-	G       []byte
-	Pkj     []byte
-	Pki     []byte
-	Ek      []byte
-	C       []byte
-	R       []byte
-	cNew    []byte
-	X1t     []byte
-	Y1t     []byte
-	T1P     []byte
-	commits [][]byte
-}
 
 func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c []byte, r kyber.Scalar, cReal []byte) bool {
 	reverseBytes(c)
 	c2KyberScalar := bls.NewKyberScalar()
 	c2KyberScalar.UnmarshalBinary(c)
-	//c2KyberScalar := bls.NewKyberScalar().SetBytes(c)
 
-	//	x1ToR := bls.NewBLS12381Suite().G1().Point().Base()
-	//	y1ToC := bls.NewBLS12381Suite().G1().Point().Base()
-	//	t1Prime := bls.NewBLS12381Suite().G1().Point().Base()
 	suite := bls.NewBLS12381Suite()
 	x1ToR := suite.G1().Point()
 
 	x1ToR.Mul(r, pointG)
 	g, _ := pointG.MarshalBinary()
-	//cb , _ := c2KyberScalar.MarshalBinary()
+
 	pkj, _ := publicKeyJ.MarshalBinary()
 	pki, _ := publicKeyI.MarshalBinary()
 	ek, _ := encryptionKeyIJ.MarshalBinary()
-	// rr,_:= r.MarshalBinary()
 
-	// x1t,_ := x1ToR.MarshalBinary()
-	// panic(P{G:g,R:rr,X1t: x1t})
-	//x1ToR := bls.NewBLS12381Suite().G1().Point().Mul(r,pointG)
 	y1ToC := bls.NewBLS12381Suite().G1().Point().Mul(c2KyberScalar, publicKeyJ)
 	t1Prime := bls.NewBLS12381Suite().G1().Point().Add(x1ToR, y1ToC)
-	//x1t,_ := y1ToC.MarshalBinary()
 
 	x2ToR := bls.NewBLS12381Suite().G1().Point().Base()
 	y2ToC := bls.NewBLS12381Suite().G1().Point().Base()
@@ -144,10 +70,6 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 	t2Prime.Add(x2ToR, y2ToC)
 	t1p, _ := t1Prime.MarshalBinary()
 	t2p, _ := t2Prime.MarshalBinary()
-	//concat := bytes.Join([][]byte{g, pkj,pki, ek, t1p, t2p}, []byte{})
-	//s := concat
-
-	//y1t,_ := y1ToC.MarshalBinary()
 
 	gstr := make([]string, len(g))
 	for i, b := range g {
@@ -175,36 +97,15 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 	}
 
 	s := "[" + strings.Join(gstr, ", ") + "]" + "[" + strings.Join(pkjstr, ", ") + "]" + "[" + strings.Join(pkistr, ", ") + "]" + "[" + strings.Join(ekstr, ", ") + "]" + "[" + strings.Join(t1pstr, ", ") + "]" + "[" + strings.Join(t2pstr, ", ") + "]"
-	//panic(P{C:c,cNew: t1p})
-	//	concat := []string{string(g), string(pkj), string(pki), string(ek), string(t1p), string(t2p)}
-	//	s := strings.Join(concat, "")
+
 	h := sha256.New()
 	h.Write([]byte(s))
 	cPrime := h.Sum(nil)
-	//panic(P{C: cReal ,cNew:cPrime})
+
 	return bytes.Equal(cPrime, cReal)
 
 }
 
-// func handleDispute(listOfComplaints []listOfComplaints) {
-
-// 	for i := 0; i < len(listOfComplaints); i++ {
-// 		verifyResult := VerifyProof(PointG, listOfComplaints[i].pubKeyOfAccuser, listOfComplaints[i].pubKeyOfAccusee, listOfComplaints[i].kij, listOfComplaints[i].proof.hash, listOfComplaints[i].proof.scalar)
-// 		if !verifyResult {
-// 			fmt.Println("Accuser is malicous")
-// 			// slash the accuser goes here
-// 		}
-// 		if distIBE.VerifyShare(listOfComplaints[i].share, listOfComplaints[i].commit) {
-// 			fmt.Println("Accusee is malicious")
-// 			//slash the accusee goes here
-// 		} else {
-// 			fmt.Println("Accuser is malicious")
-// 			// slash the accuser
-// 		}
-// 	}
-
-// 	//the result can be a column added to the complaint list that indicates the result of the complaint
-// }
 func reverseBytes(data []byte) {
 	length := len(data)
 	for i := 0; i < length/2; i++ {
@@ -213,11 +114,6 @@ func reverseBytes(data []byte) {
 }
 func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute) (*types.MsgFileDisputeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	//var r cipher.Stream
-	// dst := make([]byte, len(msg.Dispute.AddressOfAccusee))
-	// src := make([]byte, len(msg.Dispute.AddressOfAccusee))
-	// r.XORKeyStream(dst, src)
 
 	var slashed string
 	var dispute = types.Dispute{
@@ -234,7 +130,6 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 		CReal:            msg.Dispute.CReal,
 	}
 	faulter := -1
-	logrus.Info("------------ Dispute0: ", dispute.FaulterId,dispute.AccuserId)
 	count := k.GetDisputeCount(ctx)
 	dispute.Id = count
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DisputeKey))
@@ -246,7 +141,7 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	addOfAccusee := suite.G1().Point()
 	addOfAccuser := suite.G1().Point()
 	secretKeyIJ := suite.G1().Point()
-	//panic(dispute.AddressOfAccusee)
+
 	secretKeyIJ.UnmarshalBinary(dispute.Kij)
 	addOfAccusee.UnmarshalBinary(dispute.AddressOfAccusee)
 	addOfAccuser.UnmarshalBinary(dispute.AddressOfAccuser)
@@ -254,7 +149,6 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 	reverseBytes(dispute.RZkProof)
 	rScalar := bls.NewKyberScalar()
 	rScalar.UnmarshalBinary(dispute.RZkProof)
-	//rs, _ := rScalar.MarshalBinary()
 
 	res := VerifyProof(PointG, addOfAccusee, addOfAccuser, secretKeyIJ, dispute.CZkProof, rScalar, dispute.CReal)
 
@@ -268,44 +162,41 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 			commits = append(commits, c)
 		}
 
-		//reverseBytes(dispute.Share.Index)
 		reverseBytes(dispute.Share.Value)
 		sharei := bls.NewKyberScalar()
 		sharei.SetInt64(int64(binary.BigEndian.Uint32(dispute.Share.Index) + 1))
 		sharev := bls.NewKyberScalar()
 		sharev.UnmarshalBinary(dispute.Share.Value)
-		//panic(P{Concat: sharev.String(),C:dispute.Share.Index,R:dispute.Share.Value, commits: dispute.Commit.Commitments})
+
 		verify := distIBE.VerifyVSSShare(distIBE.Share{Index: sharei, Value: sharev}, commits)
 		if !verify {
-			//panic("accusee")
+
 			slashed = strconv.FormatUint(dispute.FaulterId, 10)
-			//slashed = string(rune(dispute.FaulterId))
+
 			faulter = int(dispute.FaulterId)
 		}
 		if verify {
-			//panic("accuser 1")
+
 			//slash the accuser
 			slashed = strconv.FormatUint(dispute.AccuserId, 10)
-			//slashed = string(rune(dispute.AccuserId))
+
 			faulter = int(dispute.AccuserId)
 		}
 	}
 
 	if !res {
-		//panic("accuser 2")
+
 		//slash the accuser
 		slashed = strconv.FormatUint(dispute.AccuserId, 10)
-		//slashed = string(rune(dispute.AccuserId))
+
 		faulter = int(dispute.AccuserId)
 	}
-	
-	
-	logrus.Info("------------ faulterDispute1: ", slashed)
-	added := k.AddFaulter(ctx,uint64(faulter))
-	logrus.Info("------------ indexDispute2: ", added)
+
+	added := k.AddFaulter(ctx, uint64(faulter))
+
 	if added {
 		counting := k.IncreaseCounter(ctx, 1)
-	str_count := strconv.FormatUint(counting, 10)
+		str_count := strconv.FormatUint(counting, 10)
 		event := sdk.NewEvent(
 			types.EventTypeKeygen,
 			sdk.NewAttribute(types.AttributeValueDispute, slashed),
@@ -315,11 +206,9 @@ func (k msgServer) FileDispute(goCtx context.Context, msg *types.MsgFileDispute)
 			sdk.NewAttribute("module", "dkg"),
 		)
 		ctx.EventManager().EmitEvent(event)
-		
-		logrus.Info("------------ indexDispute3: ", str_count)
+
 	}
-	
-	
+
 	return &types.MsgFileDisputeResponse{Verdict: res, IdOfSlashedValidator: []byte(slashed)}, nil
 	//return nil, nil
 }

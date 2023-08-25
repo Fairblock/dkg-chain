@@ -180,70 +180,70 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		id := timeoutData.Id
 		if round == 2 {
 			if ctx.BlockHeight() == int64(uint64(start)+desiredHeight+120) {
-			// Construct your event with attributes
-			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:", round, desiredHeight)
-			event := sdk.NewEvent(
-				"dkg-timeout",
-				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
-				sdk.NewAttribute("id", id),
-				// Add more attributes as needed
-			)
+				// Construct your event with attributes
+				logrus.Info("End of round:", round)
+				event := sdk.NewEvent(
+					"dkg-timeout",
+					sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+					sdk.NewAttribute("id", id),
+					// Add more attributes as needed
+				)
 
-			// Emit the event
-			ctx.EventManager().EmitEvent(event)
-			am.keeper.NextRound(ctx)
+				// Emit the event
+				ctx.EventManager().EmitEvent(event)
+				am.keeper.NextRound(ctx)
+			}
 		}
+		if round == 0 {
+			if ctx.BlockHeight() == int64(uint64(start)+30) {
+				// Construct your event with attributes
+				logrus.Info("End of round:", round)
+				event := sdk.NewEvent(
+					"dkg-timeout",
+					sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+					sdk.NewAttribute("id", id),
+					// Add more attributes as needed
+				)
+
+				// Emit the event
+				ctx.EventManager().EmitEvent(event)
+				am.keeper.NextRound(ctx)
+			}
 		}
-		if round == 0{ 
-		if ctx.BlockHeight() == int64(uint64(start)+30) {
-			// Construct your event with attributes
-			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
-			event := sdk.NewEvent(
-				"dkg-timeout",
-				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
-				sdk.NewAttribute("id", id),
-				// Add more attributes as needed
-			)
+		if round == 1 {
+			if ctx.BlockHeight() == int64(uint64(start)+90) {
+				// Construct your event with attributes
+				logrus.Info("End of round:", round)
+				event := sdk.NewEvent(
+					"dkg-timeout",
+					sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
+					sdk.NewAttribute("id", id),
+					// Add more attributes as needed
+				)
 
-			// Emit the event
-			ctx.EventManager().EmitEvent(event)
-			am.keeper.NextRound(ctx)
-		}}
-	if round == 1{
-		if ctx.BlockHeight() == int64(uint64(start)+90) {
-			// Construct your event with attributes
-			logrus.Info("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee less: ", round)
-			event := sdk.NewEvent(
-				"dkg-timeout",
-				sdk.NewAttribute("round", strconv.FormatUint(round, 10)),
-				sdk.NewAttribute("id", id),
-				// Add more attributes as needed
-			)
+				// Emit the event
+				ctx.EventManager().EmitEvent(event)
+				am.keeper.NextRound(ctx)
+			}
 
-			// Emit the event
-			ctx.EventManager().EmitEvent(event)
-			am.keeper.NextRound(ctx)
 		}
 
-	}
-	
 		if round == 3 {
 
 			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx), faultyList.FaultyList)
 			am.keeper.InitTimeout(ctx, 0, 0, 0, "")
 		}
 	}
-	
+
 	return []abci.ValidatorUpdate{}
 }
 
 func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData, faulters []uint64) {
-	logrus.Info("+++++++++++++++++++++++++++++++++++ mpk:", mpkData.Pks)
+
 	logrus.Info("+++++++++++++++++++++++++++++++++++ faulters:", faulters)
 	suite := bls.NewBLS12381Suite()
 
 	mpk := suite.G1().Point()
-	
 
 	if id != mpkData.Id {
 		logrus.Panic("wrong mpk data")
@@ -257,28 +257,23 @@ func CalculateMPK(ctx sdk.Context, id string, mpkData types.MPKData, faulters []
 			}
 		}
 		if !skip {
-		logrus.Info("+++++++++++++++++++++++++++++++++++  mpk1 :", i)
-		if i == 0 {
-			//logrus.Info("+++++++++++++++++++++++++++++++++++ first mpk part:", mpkData.Pks[uint64(i)])
-			mpk.UnmarshalBinary(mpkData.Pks[uint64(i)])
-			//m, _ := mpk.MarshalBinary()
-			//logrus.Info("+++++++++++++++++++++++++++++++++++ first mpk part:", err)
-			// pkb,_ :=mpk.MarshalBinary()
-			// logrus.Info("+++++++++++++++++++++++++++++++++++  mpk :", pkb)
-			
-			
+
+			if i == 0 {
+
+				mpk.UnmarshalBinary(mpkData.Pks[uint64(i)])
+
+			}
+			if i != 0 {
+				mpkPrime := suite.G1().Point()
+				_ = mpkPrime.UnmarshalBinary(mpkData.Pks[uint64(i)])
+				mpk = mpk.Add(mpk, mpkPrime)
+
+			}
+
 		}
-		if i != 0 {
-		mpkPrime := suite.G1().Point()
-		err := mpkPrime.UnmarshalBinary(mpkData.Pks[uint64(i)])
-		logrus.Info("+++++++++++++++++++++++++++++++++++ mpk part:", err)
-		mpk = mpk.Add(mpk, mpkPrime)
-		
-		}
-	
-	}}
-	pkb,_ :=mpk.MarshalBinary()
-		//logrus.Info("+++++++++++++++++++++++++++++++++++  mpk2 :", pkb)
+	}
+	pkb, _ := mpk.MarshalBinary()
+
 	event := sdk.NewEvent(
 		"dkg-mpk",
 		sdk.NewAttribute("mpk", string(pkb)),

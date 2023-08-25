@@ -10,7 +10,7 @@ import (
 func (k msgServer) KeygenResult(goCtx context.Context, msg *types.MsgKeygenResult) (*types.MsgKeygenResultResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Handling the message
+	
 	_ = ctx
 
 	return &types.MsgKeygenResultResponse{}, nil
