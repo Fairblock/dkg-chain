@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"math/big"
 	"strconv"
 	"strings"
 
@@ -19,14 +20,15 @@ import (
 	//"github.com/cosmos/cosmos-sdk/store/prefix"
 
 	"bytes"
-	
-	"crypto/sha256"
 
+	"crypto/sha256"
 
 	//"strings"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sirupsen/logrus"
+
 	//"github.com/sirupsen/logrus"
 
 	//bls12381 "github.com/kilic/bls12-381"
@@ -41,7 +43,7 @@ import (
 
 var PointG = bls.NewBLS12381Suite().G1().Point().Base()
 
-
+var modulus = "0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001"
 
 func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c []byte, r kyber.Scalar, cReal []byte) bool {
 	reverseBytes(c)
@@ -101,6 +103,24 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 	h := sha256.New()
 	h.Write([]byte(s))
 	cPrime := h.Sum(nil)
+	// Convert modulus to *big.Int
+	modulusBigInt := new(big.Int)
+	modulusBigInt, success := modulusBigInt.SetString(modulus[2:], 16) // Remove the "0x" prefix and parse as hex
+	if !success {
+		logrus.Info("Failed to convert modulus to big.Int")
+		
+	}
+
+	// Convert c to *big.Int
+	cBigInt := new(big.Int).SetBytes(cPrime)
+
+	// Compute c mod modulus
+	result := new(big.Int).Mod(cBigInt, modulusBigInt)
+
+	// Convert the result back to []byte
+	resultBytes := result.Bytes()
+
+	logrus.Info("c mod modulus = ", resultBytes, bytes.Equal(resultBytes,c))
 
 	return bytes.Equal(cPrime, cReal)
 
