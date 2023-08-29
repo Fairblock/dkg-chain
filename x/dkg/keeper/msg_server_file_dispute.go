@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"math/big"
+	//"math/big"
 	"strconv"
 	"strings"
 
@@ -103,13 +104,9 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 	h := sha256.New()
 	h.Write([]byte(s))
 	cPrime := h.Sum(nil)
-	// Convert modulus to *big.Int
 	modulusBigInt := new(big.Int)
-	modulusBigInt, success := modulusBigInt.SetString(modulus[2:], 16) // Remove the "0x" prefix and parse as hex
-	if !success {
-		logrus.Info("Failed to convert modulus to big.Int")
-		
-	}
+	modulusBigInt, _ = modulusBigInt.SetString(modulus[2:], 16) // Remove the "0x" prefix and parse as hex
+	
 
 	// Convert c to *big.Int
 	cBigInt := new(big.Int).SetBytes(cPrime)
@@ -119,10 +116,12 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 
 	// Convert the result back to []byte
 	resultBytes := result.Bytes()
+	
+	logrus.Info(resultBytes,c)
 
-	logrus.Info("c mod modulus = ", resultBytes, bytes.Equal(resultBytes,c))
+	
 
-	return bytes.Equal(cPrime, cReal)
+	return bytes.Equal(resultBytes,c)
 
 }
 
