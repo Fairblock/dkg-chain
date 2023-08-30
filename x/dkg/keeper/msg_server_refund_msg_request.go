@@ -279,8 +279,7 @@ func (b *Bcast) UnmarshalBinary(data []byte) error {
 
 // UnmarshalBinary for the vssCommit type.
 func (c *vssCommit) UnmarshalBinary(data []byte) error {
-	// Assuming that each commit is represented by a fixed number of bytes,
-	// say n bytes. If this is not the case, you'll need to adjust this code.
+	
 	commitSize := 48
 	index := 0
 	for i := 0; i < len(data); i++ {
