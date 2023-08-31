@@ -9,10 +9,10 @@ const TypeMsgKeygenResult = "keygen_result"
 
 var _ sdk.Msg = &MsgKeygenResult{}
 
-func NewMsgKeygenResult(creator string, mpk string, commitment string) *MsgKeygenResult {
+func NewMsgKeygenResult(creator string, myIndex string, commitment string) *MsgKeygenResult {
 	return &MsgKeygenResult{
 		Creator:    creator,
-		Mpk:        mpk,
+		MyIndex:        myIndex,
 		Commitment: commitment,
 	}
 }

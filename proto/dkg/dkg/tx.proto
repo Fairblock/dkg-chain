@@ -61,7 +61,7 @@ message MsgStartKeygenResponse {}
 
 message MsgKeygenResult {
   string creator    = 1;
-  string mpk        = 2;
+  string myIndex        = 2;
   string commitment = 3;
 }
 
