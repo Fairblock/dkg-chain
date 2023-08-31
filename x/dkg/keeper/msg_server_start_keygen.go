@@ -10,7 +10,7 @@ import (
 	//	"github.com/cometbft/cometbft/libs/log"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/go/pkg/mod/github.com/sirupsen/logrus@v1.9.2"
+	//"google.golang.org/go/pkg/mod/github.com/sirupsen/logrus@v1.9.2"
 	//	"github.com/sirupsen/logrus"
 )
 
