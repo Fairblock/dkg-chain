@@ -2,7 +2,7 @@ package dkg
 
 import (
 	"context"
-	"math/rand"
+//	"math/rand"
 
 	//"encoding/binary"
 	"encoding/json"
@@ -256,10 +256,10 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		if round == 3 {
 
 			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx), faultyList.FaultyList)
-			randomNumber := rand.Intn(30000)
-
 			
-			am.keeper.InitTimeout(ctx, 0, timeoutData.Timeout, uint64(ctx.BlockHeight())+ 20, strconv.Itoa(randomNumber))
+			id, _ := strconv.Atoi(timeoutData.Id)
+			
+			am.keeper.InitTimeout(ctx, 0, timeoutData.Timeout, uint64(ctx.BlockHeight())+ 20, strconv.Itoa(id+1))
 
 		}
 	}
