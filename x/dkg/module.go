@@ -179,19 +179,21 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		
 		participants := am.keeper.GetAddressList(ctx)
 		participantsString, _ := json.Marshal(participants.Addresses)
-		logrus.Info("start++++++++++++++++_____________________________________________________________: ", participants.Addresses)
+		
 		t:= len(participants.Addresses) * 1/2 
 		am.keeper.InitCounter(ctx)
 		am.keeper.InitMPK(ctx, timeoutData.Id)
 		event := sdk.NewEvent(
-			types.EventTypeKeygen,
-			sdk.NewAttribute(types.AttributeValueStart, timeoutData.Id),
+			"keygen",
+			sdk.NewAttribute("start", timeoutData.Id),
 			sdk.NewAttribute("threshold", strconv.FormatInt(int64(t),10)),
 			sdk.NewAttribute("participants", string(participantsString)),
 			sdk.NewAttribute("timeout",strconv.FormatInt(int64(timeoutData.Timeout),10)),
 			sdk.NewAttribute("module", "dkg"),
 		)
 		ctx.EventManager().EmitEvent(event)
+		logrus.Info("start++++++++++++++++_____________________________________________________________: ", participants.Addresses)
+		
 		am.keeper.InitializeAddressList(ctx)
 		return []abci.ValidatorUpdate{}
 	}

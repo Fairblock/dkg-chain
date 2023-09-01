@@ -23,7 +23,7 @@ func (k msgServer) StartKeygen(goCtx context.Context, msg *types.MsgStartKeygen)
 	if err != nil {
 		logrus.Error("start keygen error:", err)
 	}
-	k.InitTimeout(ctx, 0, timeout, uint64(ctx.BlockHeight()+20), msg.KeyID)
+	k.InitTimeout(ctx, 0, timeout, uint64(ctx.BlockHeight()+30), msg.KeyID)
 	//k.InitMPK(ctx, msg.KeyID)
 
 	_ = ctx
