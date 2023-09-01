@@ -192,15 +192,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 			sdk.NewAttribute("module", "dkg"),
 		)
 		ctx.EventManager().EmitEvent(event)
-		event = sdk.NewEvent(
-			"dkg-timeout-test",
-			sdk.NewAttribute("round", "0"),
-			sdk.NewAttribute("id", "id"),
-			// Add more attributes as needed
-		)
-
-		// Emit the event
-		ctx.EventManager().EmitEvent(event)
+	
 		logrus.Info("start++++++++++++++++_____________________________________________________________: ", participants.Addresses)
 		am.keeper.InitializeAddressList(ctx)
 		return []abci.ValidatorUpdate{}
