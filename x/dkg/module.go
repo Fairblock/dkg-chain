@@ -253,7 +253,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx), faultyList.FaultyList)
 			randomNumber := rand.Intn(30000)
 
-	
+			am.keeper.InitializeAddressList(ctx)
 			am.keeper.InitTimeout(ctx, 0, timeoutData.Timeout, uint64(ctx.BlockHeight())+ 20, strconv.Itoa(randomNumber))
 
 		}
