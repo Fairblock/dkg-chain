@@ -7,6 +7,7 @@ import (
 	"dkg/x/dkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sirupsen/logrus"
 )
 
 func (k msgServer) RegisterValidator(goCtx context.Context, msg *types.MsgRegisterValidator) (*types.MsgRegisterValidatorResponse, error) {
@@ -20,6 +21,7 @@ func (k msgServer) RegisterValidator(goCtx context.Context, msg *types.MsgRegist
 	if !msg.Participation {
 		k.RemoveAddress(ctx,msg.Address)
 	}
+	logrus.Info("registeration: ***********************************", msg.Address, msg.Participation)
 	event := sdk.NewEvent(
 		"dkg-registeration",
 		sdk.NewAttribute("address", msg.Address),

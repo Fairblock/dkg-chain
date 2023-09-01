@@ -176,8 +176,10 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 
 	timeoutData := am.keeper.GetTimeout(ctx)
 	if ctx.BlockHeight() == int64(timeoutData.Start){
+		
 		participants := am.keeper.GetAddressList(ctx)
 		participantsString, _ := json.Marshal(participants.Addresses)
+		logrus.Info("start++++++++++++++++_____________________________________________________________: ", participants.Addresses)
 		t:= len(participants.Addresses) * 1/2 
 		am.keeper.InitCounter(ctx)
 		am.keeper.InitMPK(ctx, timeoutData.Id)
