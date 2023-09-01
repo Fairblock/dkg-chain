@@ -67064,6 +67064,8 @@ definitions:
     type: object
   dkg.dkg.MsgRefundMsgRequestResponse:
     type: object
+  dkg.dkg.MsgRegisterValidatorResponse:
+    type: object
   dkg.dkg.MsgStartKeygenResponse:
     type: object
   dkg.dkg.MsgTimeoutResponse:

@@ -40,8 +40,6 @@ import (
 	bls "github.com/drand/kyber-bls12381"
 )
 
-
-
 var PointG = bls.NewBLS12381Suite().G1().Point().Base()
 
 var modulus = "0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001"
@@ -106,7 +104,6 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 	cPrime := h.Sum(nil)
 	modulusBigInt := new(big.Int)
 	modulusBigInt, _ = modulusBigInt.SetString(modulus[2:], 16) // Remove the "0x" prefix and parse as hex
-	
 
 	// Convert c to *big.Int
 	cBigInt := new(big.Int).SetBytes(cPrime)
@@ -116,10 +113,8 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 
 	// Convert the result back to []byte
 	resultBytes := result.Bytes()
-	
-	
 
-	return (bytes.Equal(resultBytes,c) && bytes.Equal(cReal,cPrime))
+	return (bytes.Equal(resultBytes, c) && bytes.Equal(cReal, cPrime))
 
 }
 

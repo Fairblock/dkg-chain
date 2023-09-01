@@ -14,7 +14,7 @@ const (
 	MemStoreKey = "mem_dkg"
 )
 const (
-	EventTypeKeygen = "keygen"
+	EventTypeKeygen  = "keygen"
 	EventTypeTimeout = "dkg-timeout"
 )
 const (

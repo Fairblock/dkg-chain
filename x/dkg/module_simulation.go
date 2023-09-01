@@ -44,6 +44,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgTimeout int = 100
 
+	opWeightMsgRegisterValidator = "op_weight_msg_register_validator"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgRegisterValidator int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -131,6 +135,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgTimeout,
 		dkgsimulation.SimulateMsgTimeout(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgRegisterValidator int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgRegisterValidator, &weightMsgRegisterValidator, nil,
+		func(_ *rand.Rand) {
+			weightMsgRegisterValidator = defaultWeightMsgRegisterValidator
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgRegisterValidator,
+		dkgsimulation.SimulateMsgRegisterValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

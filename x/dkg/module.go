@@ -2,6 +2,8 @@ package dkg
 
 import (
 	"context"
+	"math/rand"
+
 	//"encoding/binary"
 	"encoding/json"
 	"fmt"
@@ -25,6 +27,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	
 )
 
 var (
@@ -172,6 +175,23 @@ type vssCommit struct {
 func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 
 	timeoutData := am.keeper.GetTimeout(ctx)
+	if ctx.BlockHeight() == int64(timeoutData.Start){
+		participants := am.keeper.GetAddressList(ctx)
+		participantsString, _ := json.Marshal(participants.Addresses)
+		t:= len(participants.Addresses) * 1/2 
+		am.keeper.InitCounter(ctx)
+		am.keeper.InitMPK(ctx, timeoutData.Id)
+		event := sdk.NewEvent(
+			types.EventTypeKeygen,
+			sdk.NewAttribute(types.AttributeValueStart, timeoutData.Id),
+			sdk.NewAttribute("threshold", strconv.FormatInt(int64(t),10)),
+			sdk.NewAttribute("participants", string(participantsString)),
+			sdk.NewAttribute("timeout",strconv.FormatInt(int64(timeoutData.Timeout),10)),
+			sdk.NewAttribute("module", "dkg"),
+		)
+		ctx.EventManager().EmitEvent(event)
+		return []abci.ValidatorUpdate{}
+	}
 	faultyList, _ := am.keeper.GetList(ctx)
 	if timeoutData.Id != "" {
 		desiredHeight := timeoutData.Timeout
@@ -231,7 +251,11 @@ func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.Val
 		if round == 3 {
 
 			CalculateMPK(ctx, id, am.keeper.GetMPKData(ctx), faultyList.FaultyList)
-			am.keeper.InitTimeout(ctx, 0, 0, 0, "")
+			randomNumber := rand.Intn(30000)
+
+	
+			am.keeper.InitTimeout(ctx, 0, timeoutData.Timeout, uint64(ctx.BlockHeight())+ 20, strconv.Itoa(randomNumber))
+
 		}
 	}
 

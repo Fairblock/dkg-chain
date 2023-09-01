@@ -12,7 +12,7 @@ var _ sdk.Msg = &MsgKeygenResult{}
 func NewMsgKeygenResult(creator string, myIndex string, commitment string) *MsgKeygenResult {
 	return &MsgKeygenResult{
 		Creator:    creator,
-		MyIndex:        myIndex,
+		MyIndex:    myIndex,
 		Commitment: commitment,
 	}
 }

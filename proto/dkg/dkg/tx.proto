@@ -14,21 +14,22 @@ import "cosmos_proto/cosmos.proto";
 
 // import "nexus/exported/v1beta1/types.proto";
 option go_package = "dkg/x/dkg/types";
+
 message ProcessKeygenTrafficRequest {
-  bytes sender = 1 [ (gogoproto.casttype) =
-                         "github.com/cosmos/cosmos-sdk/types.AccAddress" ];
-  string session_id = 2 [ (gogoproto.customname) = "SessionID" ];
-  TrafficOut payload = 3;
-}
-// Msg defines the Msg service.
-service Msg {
-  rpc RefundMsgRequest (MsgRefundMsgRequest) returns (MsgRefundMsgRequestResponse);
-  rpc FileDispute      (MsgFileDispute     ) returns (MsgFileDisputeResponse     );
-  rpc StartKeygen      (MsgStartKeygen     ) returns (MsgStartKeygenResponse     );
-  rpc KeygenResult     (MsgKeygenResult    ) returns (MsgKeygenResultResponse    );
-  rpc Timeout          (MsgTimeout         ) returns (MsgTimeoutResponse         );
+  bytes      sender     = 1 [(gogoproto.casttype)   = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string     session_id = 2 [(gogoproto.customname) = "SessionID"                                    ];
+  TrafficOut payload    = 3;
 }
 
+// Msg defines the Msg service.
+service Msg {
+  rpc RefundMsgRequest  (MsgRefundMsgRequest ) returns (MsgRefundMsgRequestResponse );
+  rpc FileDispute       (MsgFileDispute      ) returns (MsgFileDisputeResponse      );
+  rpc StartKeygen       (MsgStartKeygen      ) returns (MsgStartKeygenResponse      );
+  rpc KeygenResult      (MsgKeygenResult     ) returns (MsgKeygenResultResponse     );
+  rpc Timeout           (MsgTimeout          ) returns (MsgTimeoutResponse          );
+  rpc RegisterValidator (MsgRegisterValidator) returns (MsgRegisterValidatorResponse);
+}
 message MsgRefundMsgRequestResponse {}
 
 message MsgFileDispute {
@@ -50,18 +51,19 @@ message MsgStartKeygen {
   string timeout      = 4;
   string participants = 5;
 }
+
 message TrafficOut {
   string to_party_uid = 1;
-  bytes payload = 2;
-  bool is_broadcast = 3;
-  string round_num = 4;
+  bytes  payload      = 2;
+  bool   is_broadcast = 3;
+  string round_num    = 4;
 }
 
 message MsgStartKeygenResponse {}
 
 message MsgKeygenResult {
   string creator    = 1;
-  string myIndex        = 2;
+  string myIndex    = 2;
   string commitment = 3;
 }
 
@@ -74,4 +76,12 @@ message MsgTimeout {
 }
 
 message MsgTimeoutResponse {}
+
+message MsgRegisterValidator {
+  string creator       = 1;
+  string address       = 2;
+  bool   participation = 3;
+}
+
+message MsgRegisterValidatorResponse {}
 

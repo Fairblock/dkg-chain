@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/json"
 	"fmt"
 	"sync"
 
@@ -69,7 +70,6 @@ func (k Keeper) IncreaseCounter(ctx sdk.Context, amount uint64) uint64 {
 }
 
 type HandleMsgInitCounter struct {
-	
 }
 
 func (k Keeper) InitTimeout(ctx sdk.Context, round uint64, timeout uint64, start uint64, id string) {
@@ -158,7 +158,7 @@ func (k Keeper) AddPk(ctx sdk.Context, pk []byte, id uint64) {
 	var mpkData3 types.MPKData
 	bz := store.Get([]byte("mpkData"))
 	mpkData.MustUnmarshalBinaryBare(bz)
-	
+
 	if len(mpkData.Pks) == 60 {
 
 		bz = store.Get([]byte("mpkData2"))
@@ -204,3 +204,56 @@ func (k Keeper) GetMPKData(ctx sdk.Context) types.MPKData {
 
 }
 
+func (k Keeper) SetAddressList(ctx sdk.Context, addressList types.AddressList) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz, err := json.Marshal(addressList)
+	if err != nil {
+		panic("could not marshal address list")
+	}
+
+	store.Set([]byte("AddressListKey"), bz)
+}
+
+func (k Keeper) GetAddressList(ctx sdk.Context) types.AddressList {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := store.Get([]byte("AddressListKey"))
+	if bz == nil {
+		return types.AddressList{}
+	}
+
+	var addressList types.AddressList
+	if err := json.Unmarshal(bz, &addressList); err != nil {
+		panic("could not unmarshal address list")
+	}
+
+	return addressList
+}
+
+func (k Keeper) AddAddress(ctx sdk.Context, address string) {
+	addressList := k.GetAddressList(ctx)
+	addressList.Addresses = append(addressList.Addresses, address)
+
+	k.SetAddressList(ctx, addressList)
+}
+
+func (k Keeper) RemoveAddress(ctx sdk.Context, address string) {
+	addressList := k.GetAddressList(ctx)
+
+	for i, addr := range addressList.Addresses {
+		if addr == address {
+			addressList.Addresses = append(addressList.Addresses[:i], addressList.Addresses[i+1:]...)
+			break
+		}
+	}
+
+	k.SetAddressList(ctx, addressList)
+}
+
+func (k Keeper) InitializeAddressList(ctx sdk.Context) {
+	emptyList := types.AddressList{
+		Addresses: []string{},
+	}
+	k.SetAddressList(ctx, emptyList)
+}

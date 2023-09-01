@@ -13,6 +13,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgStartKeygen{}, "dkg/StartKeygen", nil)
 	cdc.RegisterConcrete(&MsgKeygenResult{}, "dkg/KeygenResult", nil)
 	cdc.RegisterConcrete(&MsgTimeout{}, "dkg/Timeout", nil)
+	cdc.RegisterConcrete(&MsgRegisterValidator{}, "dkg/RegisterValidator", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -31,6 +32,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgTimeout{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgRegisterValidator{},
 	)
 	// this line is used by starport scaffolding # 3
 

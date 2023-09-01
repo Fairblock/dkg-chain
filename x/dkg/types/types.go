@@ -12,6 +12,10 @@ type Counter struct {
 	Count uint64 `json:"count"`
 }
 
+type AddressList struct {
+	Addresses []string `json:"addresses"`
+}
+
 func (c Counter) MustMarshalBinaryBare() []byte {
 	bz, err := json.Marshal(c)
 	if err != nil {
@@ -27,24 +31,22 @@ func (c *Counter) MustUnmarshalBinaryBare(bz []byte) {
 }
 
 type TimeoutData struct {
-	Round uint64 `json:"round"`
-	Id string `json:"id"`
+	Round   uint64 `json:"round"`
+	Id      string `json:"id"`
 	Timeout uint64 `json:"timeout"`
-	Start uint64 `json:"start"`
-	
+	Start   uint64 `json:"start"`
 }
 
 type Faulters struct {
-	FaultyList []uint64 `json:"faultyList"`
-	Lookup map[uint64]bool `json:"lookup"`
+	FaultyList []uint64        `json:"faultyList"`
+	Lookup     map[uint64]bool `json:"lookup"`
 }
 
-    // Initialize the map
-   
+// Initialize the map
+
 type MPKData struct {
 	Pks map[uint64][]byte `json:"pks"`
-	Id string `json:"id"`
-	
+	Id  string            `json:"id"`
 }
 
 func (t TimeoutData) MustMarshalBinaryBare() []byte {
@@ -74,7 +76,6 @@ func (m *MPKData) MustUnmarshalBinaryBare(bz []byte) {
 		panic(err) // handle the error according to your use case
 	}
 }
-
 
 func (m Faulters) MustMarshalBinaryBare() []byte {
 	bz, err := json.Marshal(m)

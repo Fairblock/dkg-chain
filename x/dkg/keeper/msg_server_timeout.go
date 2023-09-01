@@ -13,6 +13,7 @@ import (
 	bls "github.com/drand/kyber-bls12381"
 	"github.com/sirupsen/logrus"
 )
+
 type Bcast struct {
 	UIVssCommit vssCommit `json:"u_i_vss_commit"`
 	ID          uint      `json:"id"`
@@ -21,35 +22,33 @@ type Bcast struct {
 type vssCommit struct {
 	CoeffCommits [][]byte `json:"coeff_commits"`
 }
+
 func (k msgServer) Timeout(goCtx context.Context, msg *types.MsgTimeout) (*types.MsgTimeoutResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	
 	// c := ctx.Context()
-		
-	
-	round := msg.Round 
+
+	round := msg.Round
 	// r, _ := strconv.Atoi(round)
 	// r = r+ 1
 	id := msg.Id
-		// Construct your event with attributes
-		event := sdk.NewEvent(
-			"dkg-timeout",
-			sdk.NewAttribute("round", round),
-			sdk.NewAttribute("id", msg.Id),
-			// Add more attributes as needed
-		)
+	// Construct your event with attributes
+	event := sdk.NewEvent(
+		"dkg-timeout",
+		sdk.NewAttribute("round", round),
+		sdk.NewAttribute("id", msg.Id),
+		// Add more attributes as needed
+	)
 
-		// Emit the event
-		ctx.EventManager().EmitEvent(event)
-		
-	
+	// Emit the event
+	ctx.EventManager().EmitEvent(event)
+
 	if round == "2" {
-		CalculateMPK(ctx,id)
-		
+		CalculateMPK(ctx, id)
+
 	}
 	_ = ctx
-	
+
 	return &types.MsgTimeoutResponse{}, nil
 }
 func CalculateMPK(ctx sdk.Context, id string) {
@@ -62,17 +61,20 @@ func CalculateMPK(ctx sdk.Context, id string) {
 	for _, event := range events {
 		eventType := event.Type
 		attributes := event.Attributes
-		
+
 		if eventType == "keygen" {
 
 			for _, attribute := range attributes {
 
 				if string(attribute.Key) == "dispute" {
 
-					faulters = append(faulters,  binary.BigEndian.Uint64(attribute.Value))
+					faulters = append(faulters, binary.BigEndian.Uint64(attribute.Value))
 					logrus.Info(faulters)
 
-				}}}}
+				}
+			}
+		}
+	}
 	for _, event := range events {
 		eventType := event.Type
 		attributes := event.Attributes
@@ -91,7 +93,7 @@ func CalculateMPK(ctx sdk.Context, id string) {
 								logrus.Error("Error:", err)
 							}
 							for i := 0; i < len(faulters); i++ {
-								if faulters[i] == uint64(bcast.ID){
+								if faulters[i] == uint64(bcast.ID) {
 									break
 								}
 							}
@@ -102,7 +104,7 @@ func CalculateMPK(ctx sdk.Context, id string) {
 							}
 							mpkPrime := suite.G1().Point()
 							mpkPrime.UnmarshalBinary(bcast.UIVssCommit.CoeffCommits[0])
-							mpk = suite.G1().Point().Add(mpk,mpkPrime)
+							mpk = suite.G1().Point().Add(mpk, mpkPrime)
 						}
 					}
 				}
@@ -118,5 +120,5 @@ func CalculateMPK(ctx sdk.Context, id string) {
 	)
 
 	// Emit the event
-	ctx.EventManager().EmitEvent(event)	
+	ctx.EventManager().EmitEvent(event)
 }
