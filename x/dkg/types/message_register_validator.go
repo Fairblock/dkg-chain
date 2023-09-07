@@ -9,10 +9,10 @@ const TypeMsgRegisterValidator = "register_validator"
 
 var _ sdk.Msg = &MsgRegisterValidator{}
 
-func NewMsgRegisterValidator(creator string, address string, participation bool) *MsgRegisterValidator {
+func NewMsgRegisterValidator(creator string, participation bool) *MsgRegisterValidator {
 	return &MsgRegisterValidator{
 		Creator:       creator,
-		Address:       address,
+		
 		Participation: participation,
 	}
 }

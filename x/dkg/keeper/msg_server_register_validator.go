@@ -12,19 +12,19 @@ import (
 
 func (k msgServer) RegisterValidator(goCtx context.Context, msg *types.MsgRegisterValidator) (*types.MsgRegisterValidatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
+	
 	// TODO: Handling the message
 	_ = ctx
 	if msg.Participation {
-		k.AddAddress(ctx,msg.Address)
+		k.AddAddress(ctx,msg.Creator)
 	}
 	if !msg.Participation {
-		k.RemoveAddress(ctx,msg.Address)
+		k.RemoveAddress(ctx,msg.Creator)
 	}
-	logrus.Info("registeration: ***********************************", msg.Address, msg.Participation)
+	logrus.Info("registeration: ***********************************", msg.Creator, msg.Participation)
 	event := sdk.NewEvent(
 		"dkg-registeration",
-		sdk.NewAttribute("address", msg.Address),
+		sdk.NewAttribute("address", msg.Creator),
 		sdk.NewAttribute("participation", strconv.FormatBool(msg.Participation)),
 	)
 	ctx.EventManager().EmitEvent(event)

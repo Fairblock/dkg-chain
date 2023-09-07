@@ -15,12 +15,12 @@ var _ = strconv.Itoa(0)
 
 func CmdRegisterValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "register-validator [address] [participation]",
+		Use:   "register-validator  [participation]",
 		Short: "Broadcast message register-validator",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argAddress := args[0]
-			argParticipation, err := cast.ToBoolE(args[1])
+			
+			argParticipation, err := cast.ToBoolE(args[0])
 			if err != nil {
 				return err
 			}
@@ -32,7 +32,7 @@ func CmdRegisterValidator() *cobra.Command {
 
 			msg := types.NewMsgRegisterValidator(
 				clientCtx.GetFromAddress().String(),
-				argAddress,
+			
 				argParticipation,
 			)
 			if err := msg.ValidateBasic(); err != nil {

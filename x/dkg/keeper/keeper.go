@@ -232,10 +232,22 @@ func (k Keeper) GetAddressList(ctx sdk.Context) types.AddressList {
 }
 
 func (k Keeper) AddAddress(ctx sdk.Context, address string) {
-	addressList := k.GetAddressList(ctx)
-	addressList.Addresses = append(addressList.Addresses, address)
+    addressList := k.GetAddressList(ctx)
 
-	k.SetAddressList(ctx, addressList)
+    // Check if the address already exists in the list
+    addressExists := false
+    for _, existingAddress := range addressList.Addresses {
+        if existingAddress == address {
+            addressExists = true
+            break
+        }
+    }
+
+    // Add the address only if it doesn't already exist
+    if !addressExists {
+        addressList.Addresses = append(addressList.Addresses, address)
+        k.SetAddressList(ctx, addressList)
+    }
 }
 
 func (k Keeper) RemoveAddress(ctx sdk.Context, address string) {

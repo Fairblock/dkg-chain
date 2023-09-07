@@ -79,8 +79,8 @@ message MsgTimeoutResponse {}
 
 message MsgRegisterValidator {
   string creator       = 1;
-  string address       = 2;
-  bool   participation = 3;
+ 
+  bool   participation = 2;
 }
 
 message MsgRegisterValidatorResponse {}
