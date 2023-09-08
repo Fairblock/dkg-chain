@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"math/big"
+
 	//"math/big"
 	"strconv"
 	"strings"
@@ -28,6 +29,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sirupsen/logrus"
+
 	//"github.com/sirupsen/logrus"
 
 	//"github.com/sirupsen/logrus"
@@ -113,7 +116,7 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 
 	// Convert the result back to []byte
 	resultBytes := result.Bytes()
-
+	logrus.Info("validation: ", resultBytes,c,cReal,cPrime)
 	return (bytes.Equal(resultBytes, c) && bytes.Equal(cReal, cPrime))
 
 }
