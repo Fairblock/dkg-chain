@@ -117,7 +117,10 @@ func VerifyProof(pointG, publicKeyI, publicKeyJ, encryptionKeyIJ kyber.Point, c 
 	// Convert the result back to []byte
 	resultBytes := result.Bytes()
 	if len(resultBytes) < len(c) {
-		c = c[:len(resultBytes)-1]
+		if c[0] == 0 && resultBytes[0] != 0 {
+			reverseBytes(c)
+		}
+		c = c[:len(resultBytes)]
 	}
 	logrus.Info("validation: ", resultBytes,c,cReal,cPrime, bytes.Equal(resultBytes, c) , bytes.Equal(cReal, cPrime))
 	return (bytes.Equal(resultBytes, c) && bytes.Equal(cReal, cPrime))
